@@ -1,15 +1,29 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import Interfaz.*;
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        // Create Window
+        JFrame mainWindow = new JFrame("Elden Ring²: Java Edition");
+        mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        URL iconURL = Main.class.getResource("/Assets/Images/logo.png");
+        if (iconURL != null) {
+            ImageIcon logo = new ImageIcon(iconURL);
+            mainWindow.setIconImage(logo.getImage());
+        } else {
+            System.out.println("Incorrect Logo");
         }
+
+        mainWindow.setPreferredSize(new Dimension(1280, 720));
+        mainWindow.setResizable(false);
+        mainWindow.pack();
+        mainWindow.setLocationRelativeTo(null);
+
+        // Create Main Menu
+        new StartMenu(mainWindow);
+        mainWindow.setVisible(true);
     }
 }
