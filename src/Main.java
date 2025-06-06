@@ -10,12 +10,10 @@ public class Main {
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         URL iconURL = Main.class.getResource("/Assets/Images/logo.png");
-        if (iconURL != null) {
-            ImageIcon logo = new ImageIcon(iconURL);
-            mainWindow.setIconImage(logo.getImage());
-        } else {
-            System.out.println("Incorrect Logo");
-        }
+        assert iconURL != null;
+        ImageIcon logo = new ImageIcon(iconURL);
+        mainWindow.setIconImage(logo.getImage());
+
 
         mainWindow.setPreferredSize(new Dimension(1280, 720));
         mainWindow.setResizable(false);
