@@ -23,5 +23,6 @@ public class Main {
         // Create Main Menu
         new StartMenu(mainWindow);
         mainWindow.setVisible(true);
+
     }
 }
