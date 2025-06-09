@@ -57,28 +57,35 @@ public class StartMenu {
 
         // Boss selection
         JPanel BossLabel = new JPanel();
-        BossLabel.setLayout(new BoxLayout(BossLabel, BoxLayout.Y_AXIS));
+        BossLabel.setLayout(new BoxLayout(BossLabel, BoxLayout.X_AXIS));
         BossLabel.setBackground(Color.BLACK);
         BossLabel.setPreferredSize(new Dimension(150,150));
         BossLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        Dimension buttonSize = new Dimension(210,360);
 
-        Dimension buttonSize = new Dimension(170,360);
-
-        JButton Boss1 = new JButton("Boss 1");
-        Boss1.setMaximumSize(buttonSize);
-        Boss1.setPreferredSize(buttonSize);
-        Boss1.setMinimumSize(buttonSize);
-        Boss1.setAlignmentX(Component.LEFT_ALIGNMENT);
-        Boss1.setBackground(new Color(0,120,255));
-        Boss1.setOpaque(true);
-        Boss1.setBorderPainted(false);
-        Boss1.setFocusPainted(false);
-
-        BossLabel.add(Boss1);
+        for (int n = 1; n < 6; n++){
+            JButton Boss = new JButton("Boss "+n);
+            Boss.setMaximumSize(buttonSize);
+            Boss.setPreferredSize(buttonSize);
+            Boss.setMinimumSize(buttonSize);
+            Boss.setAlignmentX(Component.LEFT_ALIGNMENT);
+            Boss.setBackground(new Color(0,120,255));
+            Boss.setOpaque(true);
+            Boss.setBorderPainted(false);
+            Boss.setFocusPainted(false);
+            BossLabel.add(Boss);
+            if (n < 5) {
+                BossLabel.add(Box.createRigidArea(new Dimension(43, 0)));
+            }
+        }
         mainMenu.add(BossLabel, BorderLayout.CENTER);
 
         // Misc
         Music musicPlayer = new Music();
         musicPlayer.playMusicFromResource("/Assets/Sounds/MainMenu.wav");
+    }
+
+    private Object SelectBoss(int Boss){
+        return null;
     }
 }
