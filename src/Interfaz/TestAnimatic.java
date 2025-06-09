@@ -1,5 +1,5 @@
 package Interfaz;
-import Characters.Bosses.Necromancer_Boss.NecromancerBossAnimation;
+import Characters.Bosses.NecromancerBossAnimation;
 
 import javax.swing.*;
 import java.awt.*;
