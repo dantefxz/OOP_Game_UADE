@@ -1,7 +1,6 @@
 package Interfaz;
 
-import Misc.Music;
-
+import Misc.*;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -80,5 +79,7 @@ public class StartMenu {
         // Misc
         Music musicPlayer = new Music();
         musicPlayer.playMusicFromResource("/Assets/Sounds/MainMenu.wav");
+
+
     }
 }
