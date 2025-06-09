@@ -6,6 +6,8 @@ public class Character {
     int health;
     int damage;
     int critic;
+    boolean resistanceOn = false;
+
 
     public Character(String name, int health, int damage, int critic){
         this.name = name;
@@ -26,21 +28,37 @@ public class Character {
         this.health = health;
     }
 
-    public int takeDamage(int damage){
-        this.health = health-damage;
+    public int takeDamage(int damage, boolean resistanceOn){
+        if (resistanceOn) {
+            double damageReduce = damage / 1.5;
+            this.health = health-damage;
+            //Hacer un atributo resistanceTurns que se reste cada que se ejecute este codigo.
+        }
+        else{
+            this.health = health-damage;
+        }
+
         return health;
     }
 
-    public int makeDamage(Character enemy, int damage){
-        int enemyHealth = enemy.getHealth(); //Grab the enemy's health
-        enemy.setHealth(enemyHealth-damage); // Set its health to its health - the damage it will take
-
-        if (enemyHealth < 0){ // If the damage taken makes its health less than 0
-            enemy.setHealth(0);
-            System.out.println(enemy.getName()+ " is dead");
-        } else { //If the damage doesn't kill the enemy
-            System.out.println(enemy.getName()+ "'s health is " + enemyHealth);
+    public int critic(int damage){
+        if (Math.random() * 100 < critic) {
+            damage *= 1.5;
+            System.out.println("Critical hit!");
         }
-        return enemyHealth;
+        return damage;
+    }
+
+    public int makeDamage(Character character, int damage, boolean resistanceOn){
+        damage = critic(damage);
+        character.takeDamage(damage, resistanceOn); // Set its health to its health - the damage it will take
+
+        if (character.getHealth() < 0){ // If the damage taken makes its health less than 0
+            character.setHealth(0);
+            System.out.println(character.getName()+ " is dead");
+        } else { //If the damage doesn't kill the character
+            System.out.println(character.getName()+ "'s health is " + character.getHealth());
+        }
+        return character.getHealth();
     }
 }

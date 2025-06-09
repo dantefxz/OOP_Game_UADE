@@ -2,6 +2,8 @@ import Interfaz.*;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import Misc.DB;
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,6 +25,15 @@ public class Main {
         // Create Main Menu
         new StartMenu(mainWindow);
         mainWindow.setVisible(true);
+         // Data
+        try {
+            DB dataBase = new DB(); // carga o crea el JSON
 
+            System.out.println("Bosses derrotados: " + dataBase.getBossesDefeated());
+            System.out.println("Clase especial desbloqueada: " + dataBase.hasSpecialClass());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
