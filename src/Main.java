@@ -8,7 +8,7 @@ import Characters.Bosses.*;
 import Characters.Player.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // Create Window
         JFrame mainWindow = new JFrame("Elden Ring²: Java Edition");
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

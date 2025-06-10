@@ -1,9 +1,11 @@
 package Interfaz;
 
+import Misc.DB;
 import Misc.Music;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.HashMap;
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +15,9 @@ public class StartMenu {
     HashMap<String, Object> Menus = new HashMap<>();
     String selectedCharacter;
     String selectedBoss;
-    public StartMenu(JFrame newMainMenu) {
+    String[] Boss_Name = {"N/A","Knight Boss", "Golem Boss", "Necromancer Boss", "Elemental Boss", "Corrupted Knight"};
+    String[] Character_Name = {"N/A","Knight", "Tank", "Wizard", "Secret", "Guts"};
+    public StartMenu(JFrame newMainMenu) throws IOException {
         Menus.put("MainMenu", newMainMenu);
         //Logo
         URL iconURL = StartMenu.class.getResource("/Assets/Images/logo.png");
@@ -65,7 +69,7 @@ public class StartMenu {
         musicPlayer.playMusicFromResource("/Assets/Sounds/MainMenu.wav");
         CharacterMenu();
     }
-    public JPanel CharacterMenu(){
+    public JPanel CharacterMenu() throws IOException {
          // Boss selection
         JPanel CharacterLabel = new JPanel();
         CharacterLabel.setLayout(new BoxLayout(CharacterLabel, BoxLayout.X_AXIS));
@@ -80,7 +84,18 @@ public class StartMenu {
             characterPanel.setOpaque(false);
 
             JButton Character = new JButton();
-            String imagePath = "/Assets/Images/Sprites/Characters/Player" + n + "_preview.png";
+            String imagePath;
+            if (n == 4) { // special character Sprite
+                DB currentDB = new DB();
+                boolean specialClass = currentDB.hasSpecialClass();
+                if (specialClass){
+                    imagePath = "/Assets/Images/Sprites/Characters/Player" + n + "_preview.png";
+                } else {
+                    imagePath = "/Assets/Images/Sprites/Characters/Secret.png";
+                }
+            }else{
+                imagePath = "/Assets/Images/Sprites/Characters/Player" + n + "_preview.png";
+            }
             URL imageUrl = StartMenu.class.getResource(imagePath);
 
             if (imageUrl != null) {
@@ -89,8 +104,9 @@ public class StartMenu {
                 Character.setIcon(new ImageIcon(scaledImage));
             } else {
                 System.out.println("Imagen no encontrada para Character " + n + ": " + imagePath);
-                Character.setText("Class " + n);
+                Character.setText(Character_Name[n]);
             }
+
 
             Character.setMaximumSize(buttonSize);
             Character.setPreferredSize(buttonSize);
@@ -105,7 +121,7 @@ public class StartMenu {
             Character.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
             // Etiqueta debajo del botón
-            JLabel nameLabel = new JLabel("Character " + n);
+            JLabel nameLabel = new JLabel(Character_Name[n]);
             nameLabel.setForeground(Color.WHITE);
             nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
             nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -168,7 +184,7 @@ public class StartMenu {
                 Boss.setIcon(new ImageIcon(scaledImage));
             } else {
                 System.out.println("Imagen no encontrada para Boss " + n + ": " + imagePath);
-                Boss.setText("Boss " + n);
+                Boss.setText(Boss_Name[n]);
             }
 
             Boss.setMaximumSize(buttonSize);
@@ -184,7 +200,7 @@ public class StartMenu {
             Boss.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
             // Etiqueta debajo del botón
-            JLabel nameLabel = new JLabel("Boss " + n);
+            JLabel nameLabel = new JLabel(Boss_Name[n]);
             nameLabel.setForeground(Color.WHITE);
             nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
             nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
