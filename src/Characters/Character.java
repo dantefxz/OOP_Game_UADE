@@ -24,14 +24,23 @@ public class Character {
         return health;
     }
 
+    public void setDamage(int damage){
+        this.damage = damage;
+    }
+
     public void setHealth(int health) {
         this.health = health;
     }
 
+    public boolean setResistance(boolean resistanceOn){
+        this.resistanceOn = resistanceOn;
+        return resistanceOn;
+    }
+
     public int takeDamage(int damage, boolean resistanceOn){
         if (resistanceOn) {
-            double damageReduce = damage / 1.5;
-            this.health = health-damage;
+            int damageReduce = (int)(damage / 1.5);
+            this.health = health-damageReduce;
             //Hacer un atributo resistanceTurns que se reste cada que se ejecute este codigo.
         }
         else{

@@ -4,6 +4,8 @@ import java.awt.*;
 import java.net.URL;
 import Misc.DB;
 import java.io.IOException;
+import Characters.Bosses.*;
+import Characters.Player.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -35,5 +37,11 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Tank jugador = new Tank("Tank", 120, 30, 10); // o el que se seleccione
+        Necromancer_Boss jefe = new Necromancer_Boss("Necromancer", 100, 25, 5);
+
+
+
+
     }
 }

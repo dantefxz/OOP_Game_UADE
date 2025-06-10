@@ -1,4 +1,4 @@
-package Characters.Player.Wizard;
+package Characters.Player;
 
 import Characters.Character;
 

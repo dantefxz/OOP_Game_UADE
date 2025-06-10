@@ -1,4 +1,4 @@
-package Characters.Bosses.Element_Boss;
+package Characters.Bosses;
 
 import Characters.Character;
 

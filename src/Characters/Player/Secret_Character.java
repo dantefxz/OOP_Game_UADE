@@ -1,4 +1,4 @@
-package Characters.Player.Secret_Character;
+package Characters.Player;
 
 import Characters.Character;
 
