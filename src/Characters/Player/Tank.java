@@ -1,8 +1,6 @@
 package Characters.Player;
 
 
-import Characters.Character;
-
 public class Tank extends Character {
     int Shield;
     private boolean resistanceOn = false;

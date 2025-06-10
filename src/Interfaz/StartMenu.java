@@ -88,7 +88,6 @@ public class StartMenu {
             DB currentDB = new DB();
             boolean specialClass = currentDB.hasSpecialClass();
             if (n == 4) { // special character Sprite
-
                 if (specialClass){
                     imagePath = "/Assets/Images/Sprites/Characters/Player" + n + "_preview.png";
                 } else {
