@@ -1,64 +1,66 @@
 package Characters;
 
+import Misc.AttackManager;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Character {
 
     String name;
-    int health;
-    int damage;
-    int critic;
+    double maxHealth;
+    double health;
+    double damage;
+    double critic;
     boolean resistanceOn = false;
+    Map<String, Object> attacksList = new HashMap<>();
 
-
-    public Character(String name, int health, int damage, int critic){
+    public Character(String name, double maxHealth, double damage, double critic){
         this.name = name;
-        this.health = health;
+        this.maxHealth = maxHealth;
+        this.health = this.maxHealth;
         this.damage = damage;
         this.critic = critic;
     }
 
     public String getName(){
-        return name;
+        return this.name;
     }
 
-    public int getHealth() {
-        return health;
+    public double getHealth() {
+        return this.health;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public void setHealth(double health){
+        this.health = Math.min(health, this.maxHealth);
     }
 
-    public int takeDamage(int damage, boolean resistanceOn){
+    public void takeDamage(double damage){
         if (resistanceOn) {
-            double damageReduce = damage / 1.5;
-            this.health = health-damage;
+            double finalDamage = damage / 1.5;
+            this.setHealth(this.health - finalDamage);
             //Hacer un atributo resistanceTurns que se reste cada que se ejecute este codigo.
         }
         else{
-            this.health = health-damage;
+            this.setHealth(this.health - damage);
+        }
+        if (this.getHealth() < 0) {
+            this.setHealth(0);
+            System.out.println(this.getName() + " is dead");
+        } else {
+            System.out.println(this.getName() + "'s health is " + this.getHealth());
         }
 
-        return health;
+        if (damage < 0) { // Healing
+            double finalHealing = damage * -1;
+            double nuevaVida = this.getHealth() + (finalHealing);
+            this.setHealth(nuevaVida);
+            System.out.println(this.getName() + " se curó " + finalHealing + " de vida. Nueva vida: " + nuevaVida);
+        }
     }
 
-    public int critic(int damage){
-        if (Math.random() * 100 < critic) {
-            damage *= 1.5;
-            System.out.println("Critical hit!");
-        }
-        return damage;
-    }
-
-    public int makeDamage(Character character, int damage, boolean resistanceOn){
-        damage = critic(damage);
-        character.takeDamage(damage, resistanceOn); // Set its health to its health - the damage it will take
-
-        if (character.getHealth() < 0){ // If the damage taken makes its health less than 0
-            character.setHealth(0);
-            System.out.println(character.getName()+ " is dead");
-        } else { //If the damage doesn't kill the character
-            System.out.println(character.getName()+ "'s health is " + character.getHealth());
-        }
-        return character.getHealth();
+    public void createAttack(String name, double damage, double healing, double criticRate){
+        AttackManager NewAttack = new AttackManager(name, damage, healing, criticRate);
+        attacksList.put(name, NewAttack);
     }
 }
