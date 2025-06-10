@@ -37,10 +37,10 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Tank jugador = new Tank("Tank", 120, 30, 10); // o el que se seleccione
+
+        Tank jugador = new Tank("Tank", 120, 30, 10); // Se tien que realizar una cada uno para depende lo que decida
         Necromancer_Boss jefe = new Necromancer_Boss("Necromancer", 100, 25, 5);
-
-
+        //Asignacion de clases funcional por el momento pero mejorable
 
 
     }
