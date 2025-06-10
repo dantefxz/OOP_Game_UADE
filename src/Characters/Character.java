@@ -1,4 +1,7 @@
 package Characters;
+import Items.Items;
+
+import java.util.HashMap;
 
 public class Character {
 
@@ -7,7 +10,7 @@ public class Character {
     int damage;
     int critic;
     boolean resistanceOn = false;
-
+    HashMap<String, Items> itemsList = new HashMap<>();
 
     public Character(String name, int health, int damage, int critic){
         this.name = name;
@@ -30,6 +33,12 @@ public class Character {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    public Items giveItem(String name, int healing, int damage){
+        Items item = new Items(name, healing, damage);
+        itemsList.put(name, item);
+        return item;
     }
 
     public boolean setResistance(boolean resistanceOn){
