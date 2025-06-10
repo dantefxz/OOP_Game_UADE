@@ -2,7 +2,6 @@ package Controls;
 
 import javax.swing.*;
 
-
 public class Keys {
 
     public static void bindKeys(JComponent component,
