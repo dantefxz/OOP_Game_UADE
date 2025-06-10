@@ -13,7 +13,7 @@ public class Character {
     double damage;
     double critic;
     boolean resistanceOn = false;
-    Map<String, Object> attacksList = new HashMap<>();
+    Map<String, AttackManager> attacksList = new HashMap<>();
 
     public Character(String name, double maxHealth, double damage, double critic){
         this.name = name;
