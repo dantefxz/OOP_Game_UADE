@@ -1,6 +1,9 @@
 package Interfaz;
 
 import Misc.Music;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +11,8 @@ import java.net.URL;
 
 public class StartMenu {
     HashMap<String, Object> Menus = new HashMap<>();
+    String selectedCharacter;
+    String selectedBoss;
     public StartMenu(JFrame newMainMenu) {
         Menus.put("MainMenu", newMainMenu);
         //Logo
@@ -106,6 +111,22 @@ public class StartMenu {
             nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             nameLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0)); // Espaciado superior
 
+            // Seleccionar
+            int finalN = n;
+            Character.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Character " + finalN);
+                    JPanel currentMenu = (JPanel) Menus.get("CharacterMenu");
+                    JFrame mainMenu = getMainMenu();
+                    mainMenu.remove(currentMenu);
+                    Menus.remove("CharacterMenu");
+                    System.out.println(Menus);
+                    selectedCharacter = "Character " + finalN;
+                    BossMenu();
+                }
+            });
+
             // Añadir al panel individual
             characterPanel.add(Character);
             characterPanel.add(nameLabel);
@@ -121,7 +142,6 @@ public class StartMenu {
 
         return CharacterLabel;
     }
-
     public void BossMenu(){
         // Delete previous Menu
 
@@ -170,6 +190,22 @@ public class StartMenu {
             nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             nameLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0)); // Espaciado superior
 
+            // Seleccionar
+            int finalN = n;
+            Boss.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Boss " + finalN);
+                    JPanel currentMenu = (JPanel) Menus.get("BossMenu");
+                    JFrame mainMenu = getMainMenu();
+                    mainMenu.remove(currentMenu);
+                    Menus.remove("BossMenu");
+                    System.out.println(Menus);
+                    selectedBoss = "Boss " + finalN;
+                    System.out.println("Personaje: " + selectedCharacter + "\n Boss: " + selectedBoss);
+                }
+            });
+
             // Añadir al panel individual
             bossPanel.add(Boss);
             bossPanel.add(nameLabel);
@@ -178,8 +214,16 @@ public class StartMenu {
             if (n < 5) {
                 BossLabel.add(Box.createRigidArea(new Dimension(43, 0)));
             }
+            JFrame mainMenu = getMainMenu();
+            mainMenu.add(BossLabel, BorderLayout.CENTER);
+            Menus.put("BossMenu", BossLabel);
+            mainMenu.revalidate();
+            mainMenu.repaint();
         }
        // mainMenu.add(BossLabel, BorderLayout.CENTER);
+    }
+    private JFrame getMainMenu(){
+        return (JFrame) Menus.get("MainMenu");
     }
 }
 
