@@ -85,9 +85,10 @@ public class StartMenu {
 
             JButton Character = new JButton();
             String imagePath;
+            DB currentDB = new DB();
+            boolean specialClass = currentDB.hasSpecialClass();
             if (n == 4) { // special character Sprite
-                DB currentDB = new DB();
-                boolean specialClass = currentDB.hasSpecialClass();
+
                 if (specialClass){
                     imagePath = "/Assets/Images/Sprites/Characters/Player" + n + "_preview.png";
                 } else {
@@ -121,7 +122,19 @@ public class StartMenu {
             Character.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
             // Etiqueta debajo del botón
-            JLabel nameLabel = new JLabel(Character_Name[n]);
+            JLabel nameLabel = new JLabel();
+
+            if (n == 4) { // special character name
+                if (specialClass){
+                    n = n +1;
+                    nameLabel = new JLabel(Character_Name[n]);
+                }else{
+                    nameLabel = new JLabel(Character_Name[n]);
+                }
+            }else{
+                nameLabel = new JLabel(Character_Name[n]);
+            }
+
             nameLabel.setForeground(Color.WHITE);
             nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
             nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -236,7 +249,6 @@ public class StartMenu {
             mainMenu.revalidate();
             mainMenu.repaint();
         }
-       // mainMenu.add(BossLabel, BorderLayout.CENTER);
     }
     private JFrame getMainMenu(){
         return (JFrame) Menus.get("MainMenu");
