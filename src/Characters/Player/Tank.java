@@ -1,0 +1,57 @@
+package Characters.Player;
+
+import Misc.AttackManager;
+import Characters.Character;
+
+public class Tank extends Character {
+    int Shield;
+    private boolean resistanceOn = false;
+    private int resistanceDuration = 0;
+
+    public Tank() {
+        super("Tank", 400);
+        new AttackManager("Base_Attack", 20, 0, 15);
+        new AttackManager("Heavy_Attack", 50, 0, 35);
+        new AttackManager("Ult_Resistance", 0,20,0);
+        useUltimate();
+    }
+    public void useUltimate() {
+        increaseResistance();
+    }
+
+    public void increaseResistance(){
+        this.resistanceOn = true;
+        this.resistanceDuration = 3;
+    }
+
+    @Override
+    public void takeDamage(double damage){
+        if (resistanceOn) {
+            double finalDamage = damage / 1.5;
+            this.setHealth(this.getHealth() - finalDamage);
+            resistanceDuration --;
+            //Hacer un atributo resistanceTurns que se reste cada que se ejecute este codigo.
+        }
+        else{
+            this.setHealth(this.getHealth() - damage);
+        }
+        if (this.getHealth() < 0) {
+            this.setHealth(0);
+            System.out.println(this.getName() + " is dead");
+        } else {
+            System.out.println(this.getName() + "'s health is " + this.getHealth());
+        }
+
+        if (damage < 0) { // Healing
+            double finalHealing = damage * -1;
+            double nuevaVida = this.getHealth() + (finalHealing);
+            this.setHealth(nuevaVida);
+            System.out.println(this.getName() + " se curó " + finalHealing + " de vida. Nueva vida: " + nuevaVida);
+        }
+    }
+
+}
+
+
+
+
