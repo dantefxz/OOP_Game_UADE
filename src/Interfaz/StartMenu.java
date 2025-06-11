@@ -95,7 +95,7 @@ public class StartMenu {
         }
     }
     public JPanel CharacterMenu() throws IOException {
-         // Boss selection
+        // Character selection
         JPanel CharacterLabel = new JPanel();
         CharacterLabel.setLayout(new BoxLayout(CharacterLabel, BoxLayout.X_AXIS));
         CharacterLabel.setBackground(Color.BLACK);
@@ -276,7 +276,7 @@ public class StartMenu {
             // Seleccionar
             DB currentDB = new DB();
             Set<Integer> BossesDefeated =currentDB.getBossesDefeated();
-            int tam = BossesDefeated.size();
+
             int finalN = n;
             if (BossesDefeated.contains(finalN - 1) || finalN == 0) {
                 Boss.setEnabled(true);
@@ -322,13 +322,55 @@ public class StartMenu {
             Menus.put("BossMenu", BossLabel);
             mainMenu.revalidate();
             mainMenu.repaint();
+
+
+            JButton backButton = new JButton("Volver");
+
+            backButton.setFont(loadCustomFont(18f));
+            backButton.setForeground(Color.WHITE);
+            backButton.setFocusPainted(false);
+            backButton.setBackground(new Color(50, 50, 50));
+            backButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+            backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            backButton.setMaximumSize(new Dimension(200, 40));
+            backButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JPanel bossMenu = (JPanel) Menus.get("BossMenu");
+                    if (bossMenu != null) {
+                        mainMenu.remove(bossMenu);
+                        Menus.remove("BossMenu");
+                    }
+                    try {
+                        CharacterMenu();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    mainMenu.revalidate();
+                    mainMenu.repaint();
+                }
+            });
+            JPanel bottomPanel = new JPanel();
+            bottomPanel.setOpaque(false);
+            bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+            bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+            bottomPanel.add(Box.createVerticalGlue());
+            bottomPanel.add(backButton);
+
+            mainMenu.add(bottomPanel, BorderLayout.SOUTH);
+
+            // Refrescar pantalla
+            mainMenu.revalidate();
+            mainMenu.repaint();
         }
+
+
     }
+
     private JFrame getMainMenu(){
         return (JFrame) Menus.get("MainMenu");
     }
 
 }
-
-
-
