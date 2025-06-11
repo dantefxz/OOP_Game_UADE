@@ -3,6 +3,7 @@ package Characters;
 import Misc.AttackManager;
 import java.util.HashMap;
 import java.util.Map;
+import Items.Items;
 
 public class Character {
 
@@ -11,6 +12,9 @@ public class Character {
     double health;
     boolean resistanceOn = false;
     Map<String, AttackManager> attacksList = new HashMap<>();
+    Map<String, Items> Inventory = new HashMap<>();
+
+
 
     public Character(String name, double maxHealth){
         this.name = name;
@@ -27,7 +31,12 @@ public class Character {
     }
 
     public void setHealth(double health){
-        this.health = Math.min(health, this.maxHealth);
+        if (health < 0){
+            this.health = 0;
+        } else {
+            this.health = Math.min(health, this.maxHealth);
+        }
+
     }
 
     public void takeDamage(double damage){
@@ -51,4 +60,27 @@ public class Character {
         AttackManager NewAttack = new AttackManager(name, damage, healing, criticRate);
         attacksList.put(name, NewAttack);
     }
+
+    public void addItem(String name, int healing, int damage){
+        Items newItem = new Items(name, healing, damage);
+        Inventory.put(name, newItem);
+    }
+
+    public void useItem(String name, Character objective){ //faltaria hacer que el item al ser usado se borre
+        for (String i : Inventory.keySet()){
+            Items item = Inventory.get(i);
+            if (i.equals(name)){
+                if (item.getHealing() > 0){
+                    double heal = item.getHealing() + objective.getHealth();
+                    objective.setHealth(heal);
+                }
+
+                if (item.getDamage() > 0){
+                    double newHealth = objective.getHealth() - item.getDamage();
+                    objective.setHealth(newHealth);
+                }
+            }
+        }
+    }
+
 }
