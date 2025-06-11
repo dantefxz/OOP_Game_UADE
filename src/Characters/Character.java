@@ -3,6 +3,7 @@ package Characters;
 import Misc.AttackManager;
 import java.util.HashMap;
 import java.util.Map;
+import Items.Items;
 
 public abstract class Character {
 
@@ -10,6 +11,7 @@ public abstract class Character {
     double maxHealth;
     double health;
     Map<String, AttackManager> attacksList = new HashMap<>();
+    Map<String, Items> Inventory = new HashMap<>();
 
     public Character(String name, double maxHealth){
         this.name = name;
@@ -52,4 +54,29 @@ public abstract class Character {
     }
 
     public abstract void checkAbility(String ability);
+
+    public void addItem(String name, int healing, int damage){
+        Items newItem = new Items(name, healing, damage);
+        Inventory.put(name, newItem);
+    }
+
+    public void useItem(String name, Character objective){
+        for (String i : Inventory.keySet()){
+            Items item = Inventory.get(i);
+            if (i.equals(name)){
+                if (item.getHealing() > 0){
+                    double heal = item.getHealing() + objective.getHealth();
+                    objective.setHealth(heal);
+                }
+
+                if (item.getDamage() > 0){
+                    double newHealth = objective.getHealth() - item.getDamage();
+                    objective.setHealth(newHealth);
+                }
+                Inventory.remove(name);
+                return;
+            }
+        }
+    }
+
 }

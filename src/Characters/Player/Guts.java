@@ -7,8 +7,12 @@ public class Guts extends Character {
 
     public Guts() {
         super("Guts", 300);
-        new AttackManager("Base_Atack", 50, 10, 15);
-        new AttackManager("Ability", 30, 20,20);
-        new AttackManager("Ultimate", 60, 15, 50);
+        new AttackManager("Base_Atack", 50, 10, 15, 0);
+        new AttackManager("Ability", 30, 20,20, 1);
+        new AttackManager("Ultimate", 60, 15, 50, 2);
+    }
+    @Override
+    public void checkAbility(String ability) {
+
     }
 }

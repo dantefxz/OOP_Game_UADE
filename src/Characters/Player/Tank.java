@@ -14,8 +14,8 @@ public class Tank extends Character {
     public Tank() {
         super("Tank", 400);
         new AttackManager("Base_Attack", 20, 0, 15, 0);
-        new AttackManager("Heavy_Attack", 50, 0, 35, 1);
-        new AttackManager("Ult_Resistance", 0, 20,0, 0);
+        new AttackManager("Heavy_Attack", 50, 0, 35, 3);
+        new AttackManager("Ult_Resistance", 0, 20,0, 5);
     }
 
     private void increaseResistance(){
