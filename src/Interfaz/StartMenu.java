@@ -219,6 +219,7 @@ public class StartMenu {
                 CharacterLabel.add(Box.createRigidArea(new Dimension(127, 0)));
             }
         }
+
         JFrame mainMenu = (JFrame) Menus.get("MainMenu");
         mainMenu.add(CharacterLabel, BorderLayout.CENTER);
         Menus.put("CharacterMenu", CharacterLabel);
