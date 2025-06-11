@@ -226,7 +226,7 @@ public class StartMenu {
         return CharacterLabel;
     }
     public void BossMenu() throws IOException {
-        // Delete previous Menu
+        JFrame mainMenu = getMainMenu();
 
         // Boss selection
         JPanel BossLabel = new JPanel();
@@ -235,6 +235,44 @@ public class StartMenu {
         BossLabel.setPreferredSize(new Dimension(150, 150));
         BossLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         Dimension buttonSize = new Dimension(210, 360);
+
+        // Botón volver
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setOpaque(false);
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        bottomPanel.add(Box.createVerticalGlue());
+
+        JButton backButton = new JButton("Volver");
+        backButton.setFont(loadCustomFont(18f));
+        backButton.setForeground(Color.WHITE);
+        backButton.setFocusPainted(false);
+        backButton.setBackground(new Color(50, 50, 50));
+        backButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backButton.setMaximumSize(new Dimension(200, 40));
+        backButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JPanel bossMenu = (JPanel) Menus.get("BossMenu");
+                if (bossMenu != null) {
+                    mainMenu.remove(bossMenu);
+                    Menus.remove("BossMenu");
+                }
+                try {
+                    CharacterMenu();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                mainMenu.remove(bottomPanel);
+                mainMenu.revalidate();
+                mainMenu.repaint();
+            }
+        });
+        bottomPanel.add(backButton);
+        mainMenu.add(bottomPanel, BorderLayout.SOUTH);
 
         for (int n = 1; n < 6; n++) {
             JPanel bossPanel = new JPanel();
@@ -275,22 +313,25 @@ public class StartMenu {
 
             // Seleccionar
             DB currentDB = new DB();
-            Set<Integer> BossesDefeated =currentDB.getBossesDefeated();
+            Set<Integer> BossesDefeated = currentDB.getBossesDefeated();
 
             int finalN = n;
-            if (BossesDefeated.contains(finalN - 1) || finalN == 0) {
+            if (BossesDefeated.contains(finalN - 1) || finalN == 1) {
                 Boss.setEnabled(true);
                 Boss.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         System.out.println("Boss " + finalN);
-                        JPanel currentMenu = (JPanel) Menus.get("BossMenu");
-                        JFrame mainMenu = getMainMenu();
-                        mainMenu.remove(currentMenu);
-                        Menus.remove("BossMenu");
                         System.out.println(Menus);
                         selectedBoss = "Boss " + finalN;
                         System.out.println("Personaje: " + selectedCharacter + "\n Boss: " + selectedBoss);
+                        //JPanel currentMenu = (JPanel) Menus.get("BossMenu");
+                        JFrame mainMenu = getMainMenu();
+                        mainMenu.remove(BossLabel);
+                        mainMenu.remove(bottomPanel);
+                        Menus.remove("BossMenu");
+                        mainMenu.revalidate();
+                        mainMenu.repaint();
                     }
                 });
             }else{
@@ -317,54 +358,13 @@ public class StartMenu {
             if (n < 5) {
                 BossLabel.add(Box.createRigidArea(new Dimension(43, 0)));
             }
-            JFrame mainMenu = getMainMenu();
-            mainMenu.add(BossLabel, BorderLayout.CENTER);
-            Menus.put("BossMenu", BossLabel);
-            mainMenu.revalidate();
-            mainMenu.repaint();
-
-
-            JButton backButton = new JButton("Volver");
-
-            backButton.setFont(loadCustomFont(18f));
-            backButton.setForeground(Color.WHITE);
-            backButton.setFocusPainted(false);
-            backButton.setBackground(new Color(50, 50, 50));
-            backButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-            backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-            backButton.setMaximumSize(new Dimension(200, 40));
-            backButton.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JPanel bossMenu = (JPanel) Menus.get("BossMenu");
-                    if (bossMenu != null) {
-                        mainMenu.remove(bossMenu);
-                        Menus.remove("BossMenu");
-                    }
-                    try {
-                        CharacterMenu();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    mainMenu.revalidate();
-                    mainMenu.repaint();
-                }
-            });
-            JPanel bottomPanel = new JPanel();
-            bottomPanel.setOpaque(false);
-            bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
-            bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
-            bottomPanel.add(Box.createVerticalGlue());
-            bottomPanel.add(backButton);
-
-            mainMenu.add(bottomPanel, BorderLayout.SOUTH);
-
-            // Refrescar pantalla
-            mainMenu.revalidate();
-            mainMenu.repaint();
         }
+
+        // Final
+        mainMenu.add(BossLabel, BorderLayout.CENTER);
+        Menus.put("BossMenu", BossLabel);
+        mainMenu.revalidate();
+        mainMenu.repaint();
 
 
     }
