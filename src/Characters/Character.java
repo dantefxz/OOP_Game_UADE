@@ -46,10 +46,10 @@ public abstract class Character {
         }
     }
 
-    public void createAttack(String name, double damage, double healing, double criticRate){
-        AttackManager NewAttack = new AttackManager(name, damage, healing, criticRate);
+    public void createAttack(String name, double damage, double healing, double criticRate, int turns){
+        AttackManager NewAttack = new AttackManager(name, damage, healing, criticRate, turns);
         attacksList.put(name, NewAttack);
     }
 
-    public void checkAbility(String ability){}
+    public abstract void checkAbility(String ability);
 }

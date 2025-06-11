@@ -18,7 +18,7 @@ public class Tank extends Character {
         new AttackManager("Ult_Resistance", 0, 20,0, 0);
     }
 
-    public void increaseResistance(){
+    private void increaseResistance(){
         this.resistanceOn = true;
         this.resistanceDuration = 3;
     }
@@ -46,6 +46,13 @@ public class Tank extends Character {
             double nuevaVida = this.getHealth() + (finalHealing);
             this.setHealth(nuevaVida);
             System.out.println(this.getName() + " se curó " + finalHealing + " de vida. Nueva vida: " + nuevaVida);
+        }
+    }
+
+    @Override
+    public void checkAbility(String ability){
+        if (ability.equals("Ult_Resistance")){
+            increaseResistance();
         }
     }
 
