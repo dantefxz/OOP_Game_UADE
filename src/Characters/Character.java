@@ -4,12 +4,11 @@ import Misc.AttackManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Character {
+public abstract class Character {
 
     String name;
     double maxHealth;
     double health;
-    boolean resistanceOn = false;
     Map<String, AttackManager> attacksList = new HashMap<>();
 
     public Character(String name, double maxHealth){
@@ -51,4 +50,6 @@ public class Character {
         AttackManager NewAttack = new AttackManager(name, damage, healing, criticRate);
         attacksList.put(name, NewAttack);
     }
+
+    public void checkAbility(String ability){}
 }

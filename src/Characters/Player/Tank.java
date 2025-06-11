@@ -2,21 +2,20 @@ package Characters.Player;
 
 import Misc.AttackManager;
 import Characters.Character;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Tank extends Character {
     int Shield;
     private boolean resistanceOn = false;
     private int resistanceDuration = 0;
+    Map<String, Object> customAbility = new HashMap<>();
 
     public Tank() {
         super("Tank", 400);
-        new AttackManager("Base_Attack", 20, 0, 15);
-        new AttackManager("Heavy_Attack", 50, 0, 35);
-        new AttackManager("Ult_Resistance", 0,20,0);
-        useUltimate();
-    }
-    public void useUltimate() {
-        increaseResistance();
+        new AttackManager("Base_Attack", 20, 0, 15, 0);
+        new AttackManager("Heavy_Attack", 50, 0, 35, 1);
+        new AttackManager("Ult_Resistance", 0, 20,0, 0);
     }
 
     public void increaseResistance(){
