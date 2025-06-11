@@ -66,7 +66,7 @@ public class Character {
         Inventory.put(name, newItem);
     }
 
-    public void useItem(String name, Character objective){ //faltaria hacer que el item al ser usado se borre
+    public void useItem(String name, Character objective){
         for (String i : Inventory.keySet()){
             Items item = Inventory.get(i);
             if (i.equals(name)){
@@ -79,6 +79,8 @@ public class Character {
                     double newHealth = objective.getHealth() - item.getDamage();
                     objective.setHealth(newHealth);
                 }
+                Inventory.remove(name);
+                return;
             }
         }
     }
