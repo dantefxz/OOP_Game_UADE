@@ -2,15 +2,18 @@ package Interfaz;
 
 import Misc.DB;
 import Misc.Music;
+import org.json.JSONArray;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.awt.FontFormatException;
+import java.util.Set;
 
 public class StartMenu {
     HashMap<String, Object> Menus = new HashMap<>();
@@ -175,7 +178,11 @@ public class StartMenu {
                             mainMenu.remove(currentMenu);
                             Menus.remove("CharacterMenu");
                             selectedCharacter = "Character " + finalN;
-                            BossMenu();
+                            try {
+                                BossMenu();
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
                         }
                     });
                 } else {
@@ -194,7 +201,11 @@ public class StartMenu {
                         mainMenu.remove(currentMenu);
                         Menus.remove("CharacterMenu");
                         selectedCharacter = "Character " + finalN;
-                        BossMenu();
+                        try {
+                            BossMenu();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 });
             }
@@ -214,7 +225,7 @@ public class StartMenu {
 
         return CharacterLabel;
     }
-    public void BossMenu(){
+    public void BossMenu() throws IOException {
         // Delete previous Menu
 
         // Boss selection
@@ -263,20 +274,40 @@ public class StartMenu {
             nameLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0)); // Espaciado superior
 
             // Seleccionar
+            DB currentDB = new DB();
+            Set<Integer> BossesDefeated =currentDB.getBossesDefeated();
+            int tam = BossesDefeated.size();
             int finalN = n;
-            Boss.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Boss " + finalN);
-                    JPanel currentMenu = (JPanel) Menus.get("BossMenu");
-                    JFrame mainMenu = getMainMenu();
-                    mainMenu.remove(currentMenu);
-                    Menus.remove("BossMenu");
-                    System.out.println(Menus);
-                    selectedBoss = "Boss " + finalN;
-                    System.out.println("Personaje: " + selectedCharacter + "\n Boss: " + selectedBoss);
-                }
-            });
+            if (BossesDefeated.contains(finalN - 1) || finalN == 0) {
+                Boss.setEnabled(true);
+                Boss.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Boss " + finalN);
+                        JPanel currentMenu = (JPanel) Menus.get("BossMenu");
+                        JFrame mainMenu = getMainMenu();
+                        mainMenu.remove(currentMenu);
+                        Menus.remove("BossMenu");
+                        System.out.println(Menus);
+                        selectedBoss = "Boss " + finalN;
+                        System.out.println("Personaje: " + selectedCharacter + "\n Boss: " + selectedBoss);
+                    }
+                });
+            }else{
+                Boss.setEnabled(true); // Botón habilitado para mostrar mensaje, pero bloqueado lógicamente
+                Boss.setText("Boss " + finalN + " 🔒");
+
+                Boss.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        JOptionPane.showMessageDialog(null,
+                                "Debes vencer a " + (Boss_Name[finalN - 1]) + " antes de enfrentar a " + Boss_Name[finalN],
+                                "Boss Bloqueado",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                });
+
+            }
 
             // Añadir al panel individual
             bossPanel.add(Boss);

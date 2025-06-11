@@ -31,14 +31,7 @@ public class Character {
     }
 
     public void takeDamage(double damage){
-        if (resistanceOn) {
-            double finalDamage = damage / 1.5;
-            this.setHealth(this.health - finalDamage);
-            //Hacer un atributo resistanceTurns que se reste cada que se ejecute este codigo.
-        }
-        else{
-            this.setHealth(this.health - damage);
-        }
+        this.setHealth(this.health - damage);
         if (this.getHealth() < 0) {
             this.setHealth(0);
             System.out.println(this.getName() + " is dead");
