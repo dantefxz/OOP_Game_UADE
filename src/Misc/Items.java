@@ -1,6 +1,4 @@
-package Items;
-
-import java.util.HashMap;
+package Misc;
 
 public class Items {
     String name;

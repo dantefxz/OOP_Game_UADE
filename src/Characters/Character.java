@@ -3,7 +3,7 @@ package Characters;
 import Misc.AttackManager;
 import java.util.HashMap;
 import java.util.Map;
-import Items.Items;
+import Misc.Items;
 
 public abstract class Character {
 
@@ -11,7 +11,7 @@ public abstract class Character {
     double maxHealth;
     double health;
     Map<String, AttackManager> attacksList = new HashMap<>();
-    Map<String, Items> Inventory = new HashMap<>();
+    Map<String, Items> inventory = new HashMap<>();
 
     public Character(String name, double maxHealth){
         this.name = name;
@@ -27,8 +27,8 @@ public abstract class Character {
         return this.health;
     }
 
-    public void setHealth(double health){
-        this.health = Math.min(health, this.maxHealth);
+    public void setHealth(double newHealth){
+        this.health = Math.min(Math.max(newHealth, 0), this.maxHealth);
     }
 
     public void takeDamage(double damage){
@@ -57,26 +57,32 @@ public abstract class Character {
 
     public void addItem(String name, int healing, int damage){
         Items newItem = new Items(name, healing, damage);
-        Inventory.put(name, newItem);
+        inventory.put(name, newItem);
     }
 
     public void useItem(String name, Character objective){
-        for (String i : Inventory.keySet()){
-            Items item = Inventory.get(i);
-            if (i.equals(name)){
-                if (item.getHealing() > 0){
-                    double heal = item.getHealing() + objective.getHealth();
-                    objective.setHealth(heal);
-                }
-
-                if (item.getDamage() > 0){
-                    double newHealth = objective.getHealth() - item.getDamage();
-                    objective.setHealth(newHealth);
-                }
-                Inventory.remove(name);
-                return;
-            }
+        Items item = inventory.get(name);
+        if (item.getHealing() > 0){
+            double heal = item.getHealing() + objective.getHealth();
+            objective.setHealth(heal);
         }
+
+        if (item.getDamage() > 0){
+            double newHealth = objective.getHealth() - item.getDamage();
+            objective.setHealth(newHealth);
+        }
+        inventory.remove(name);
     }
 
+    public Object getItems(){ // Items ordenados por ej: pocion: 3
+        Map<String, Integer> orderedItems = new HashMap<>();
+        
+        for (String i : inventory.keySet()){
+            if (orderedItems.get(i) != null){
+                Integer amount = orderedItems.get(i);
+                orderedItems.replace(i, amount + 1);
+            }
+        }
+        return orderedItems;
+    }
 }
