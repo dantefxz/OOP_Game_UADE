@@ -10,13 +10,15 @@ import java.util.HashMap;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.awt.FontFormatException;
 
 public class StartMenu {
     HashMap<String, Object> Menus = new HashMap<>();
     String selectedCharacter;
     String selectedBoss;
-    String[] Boss_Name = {"N/A","Knight Boss", "Golem Boss", "Necromancer Boss", "Elemental Boss", "Corrupted Knight"};
+    String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Elementor, the Forbidden Fire", "Sir Malrik, the Corrupted"};
     String[] Character_Name = {"N/A","Knight", "Tank", "Wizard", "Secret", "Guts"};
+
     public StartMenu(JFrame newMainMenu) throws IOException {
         Menus.put("MainMenu", newMainMenu);
         //Logo
@@ -68,6 +70,26 @@ public class StartMenu {
         Music musicPlayer = new Music();
         musicPlayer.playMusicFromResource("/Assets/Sounds/MainMenu.wav");
         CharacterMenu();
+
+    }
+    // Letra personalizada
+    private Font loadCustomFont(float size) {
+        try {
+            URL fontUrl = getClass().getResource("/Assets/Fonts/Dungeon.ttf");
+            if (fontUrl == null) {
+                System.err.println("Fuente Dungeon no encontrada.");
+                return new Font("Serif", Font.BOLD, (int) size);
+            }
+
+            Font font = Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream());
+            font = font.deriveFont(size);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(font);
+            return font;
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+            return new Font("Serif", Font.BOLD, (int) size);
+        }
     }
     public JPanel CharacterMenu() throws IOException {
          // Boss selection
@@ -135,25 +157,47 @@ public class StartMenu {
             }
 
             nameLabel.setForeground(Color.WHITE);
-            nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            nameLabel.setFont(loadCustomFont(22f));
             nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             nameLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0)); // Espaciado superior
 
             // Seleccionar
             int finalN = n;
-            Character.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Character " + finalN);
-                    JPanel currentMenu = (JPanel) Menus.get("CharacterMenu");
-                    JFrame mainMenu = getMainMenu();
-                    mainMenu.remove(currentMenu);
-                    Menus.remove("CharacterMenu");
-                    System.out.println(Menus);
-                    selectedCharacter = "Character " + finalN;
-                    BossMenu();
+
+            if (n == 4) {
+                if (specialClass) {
+                    Character.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("Character " + finalN);
+                            JPanel currentMenu = (JPanel) Menus.get("CharacterMenu");
+                            JFrame mainMenu = getMainMenu();
+                            mainMenu.remove(currentMenu);
+                            Menus.remove("CharacterMenu");
+                            selectedCharacter = "Character " + finalN;
+                            BossMenu();
+                        }
+                    });
+                } else {
+                    // Si no tiene acceso al personaje secreto
+                    Character.setEnabled(false); // Desactiva el botón
+                    Character.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)); // Cambia el cursor
                 }
-            });
+            } else {
+                // Personajes normales
+                Character.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Character " + finalN);
+                        JPanel currentMenu = (JPanel) Menus.get("CharacterMenu");
+                        JFrame mainMenu = getMainMenu();
+                        mainMenu.remove(currentMenu);
+                        Menus.remove("CharacterMenu");
+                        selectedCharacter = "Character " + finalN;
+                        BossMenu();
+                    }
+                });
+            }
 
             // Añadir al panel individual
             characterPanel.add(Character);
@@ -214,7 +258,7 @@ public class StartMenu {
             // Etiqueta debajo del botón
             JLabel nameLabel = new JLabel(Boss_Name[n]);
             nameLabel.setForeground(Color.WHITE);
-            nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            nameLabel.setFont(loadCustomFont(16f));
             nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             nameLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0)); // Espaciado superior
 
@@ -252,5 +296,8 @@ public class StartMenu {
     private JFrame getMainMenu(){
         return (JFrame) Menus.get("MainMenu");
     }
+
 }
+
+
 
