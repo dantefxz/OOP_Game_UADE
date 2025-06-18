@@ -1,52 +1,45 @@
 package Interfaz;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class AnimationPanel extends JPanel {
-    private BufferedImage[] frames;
+    private BufferedImage spriteSheet;
+    private int frameWidth;
+    private int frameHeight;
     private int currentFrame = 0;
-    private int frameDelay = 100; // milisegundos entre frames
+    private int totalFrames;
     private Timer timer;
 
-    public AnimationPanel(BufferedImage[] frames) {
-        this.frames = frames;
-        setPreferredSize(new Dimension(frames[0].getWidth(), frames[0].getHeight()));
-        setOpaque(false); // Para que puedas superponerlo si querés
+    public AnimationPanel(String pj, String character, String animationName) {
+        try {
+            spriteSheet = ImageIO.read(new File("src/Assets/Images/Sprites/" + pj +"/"+ character +"/" + animationName + ".png"));
+            frameHeight = spriteSheet.getHeight();
+            frameWidth = frameHeight; // Asumimos que cada frame es cuadrado
+            totalFrames = spriteSheet.getWidth() / frameWidth;
 
-        // Timer para actualizar el frame
-        timer = new Timer(frameDelay, e -> {
-            currentFrame = (currentFrame + 1) % frames.length;
-            repaint();
-        });
-        timer.start();
+            timer = new Timer(120, e -> {
+                currentFrame = (currentFrame + 1) % totalFrames;
+                repaint();
+            });
+            timer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        setPreferredSize(new Dimension(200, 200)); // Cambiá según el tamaño deseado
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (frames != null && frames[currentFrame] != null) {
-            g.drawImage(frames[currentFrame], 0, 0, null);
+        if (spriteSheet != null) {
+            int x = currentFrame * frameWidth;
+            g.drawImage(spriteSheet.getSubimage(x, 0, frameWidth, frameHeight), 0, 0, frameWidth, frameHeight, null);
         }
-    }
-
-    public void setFrames(BufferedImage[] newFrames) {
-        this.frames = newFrames;
-        this.currentFrame = 0;
-        repaint();
-    }
-
-    public void setFrameDelay(int delayMillis) {
-        this.frameDelay = delayMillis;
-        timer.setDelay(delayMillis);
-    }
-
-    public void stopAnimation() {
-        timer.stop();
-    }
-
-    public void startAnimation() {
-        timer.start();
     }
 }

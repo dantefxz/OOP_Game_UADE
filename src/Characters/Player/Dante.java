@@ -3,10 +3,10 @@ package Characters.Player;
 import Characters.Character;
 import Misc.AttackManager;
 
-public class Guts extends Character {
+public class Dante extends Character {
 
-    public Guts() {
-        super("Guts", 300);
+    public Dante() {
+        super("Dante", 300);
         new AttackManager("Base_Atack", 50, 10, 15, 0);
         new AttackManager("Ability", 30, 20,20, 1);
         new AttackManager("Ultimate", 60, 15, 50, 2);

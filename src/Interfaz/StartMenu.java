@@ -18,7 +18,7 @@ public class StartMenu {
     String selectedCharacter;
     String selectedBoss;
     String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Elementor, the Forbidden Fire", "Sir Malrik, the Corrupted"};
-    String[] Character_Name = {"N/A","Knight", "Tank", "Wizard", "Secret", "Guts"}; // Cambiar con File
+    String[] Character_Name = {"N/A","Knight", "Tank", "Wizard", "Secret", "Dante"}; // Cambiar con File
 
     public StartMenu(JFrame newMainMenu) throws IOException {
         Menus.put("MainMenu", newMainMenu);
