@@ -16,9 +16,9 @@ public class AnimationPanel extends JPanel {
     private Timer timer;
     private boolean isBoss;
 
-    // Fijamos un tamaño estándar para el panel
-    private final int panelWidth = 256;
-    private final int panelHeight = 256;
+    // Panel estándar
+    private final int panelWidth = 300;
+    private final int panelHeight = 300;
 
     public AnimationPanel(String pj, String character, String animationName) {
         try {
@@ -32,18 +32,19 @@ public class AnimationPanel extends JPanel {
             }
 
             spriteSheet = ImageIO.read(new File(path));
-
-
             frameHeight = spriteSheet.getHeight();
-            totalFrames = spriteSheet.getWidth() / frameHeight;
-            frameWidth = spriteSheet.getWidth() / totalFrames;
 
-            // Timer para animar automáticamente
+            totalFrames = detectarFrames(spriteSheet);
+            int separacion = 4; // Ajustable si tus sprites tienen más espacio
+
+            frameWidth = (spriteSheet.getWidth() + separacion) / totalFrames - separacion;
+
+            // Timer para animar
             timer = new Timer(120, e -> {
                 if (isBoss) {
-                    currentFrame = (currentFrame - 1 + totalFrames) % totalFrames;
+                    currentFrame = (currentFrame - 1 + totalFrames) % totalFrames; // Reversa
                 } else {
-                    currentFrame = (currentFrame + 1) % totalFrames;
+                    currentFrame = (currentFrame + 1) % totalFrames; // Normal
                 }
                 repaint();
             });
@@ -59,13 +60,59 @@ public class AnimationPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        System.out.println(isBoss);
         if (spriteSheet != null) {
-            int x = currentFrame * frameWidth;
+            int separacion = 4;
+            int x;
+
+            if (!isBoss) {
+                // Characters: de izquierda a derecha
+                x = currentFrame * (frameWidth + separacion);
+            } else {
+                // Bosses: de derecha a izquierda
+                x = spriteSheet.getWidth() - (currentFrame + 1) * (frameWidth + separacion);
+            }
+
+
+            // Asegurarse de no salir del borde
+            x = Math.max(0, Math.min(x, spriteSheet.getWidth() - frameWidth));
 
             BufferedImage frame = spriteSheet.getSubimage(x, 0, frameWidth, frameHeight);
             Image scaledFrame = frame.getScaledInstance(panelWidth, panelHeight, Image.SCALE_SMOOTH);
-            g.drawImage(scaledFrame, 0, 0, null);
+
+            int xCentrado = (getWidth() - panelWidth) / 2;
+            int yCentrado = (getHeight() - panelHeight) / 2;
+
+            g.drawImage(scaledFrame, xCentrado, yCentrado, null);
+
         }
+    }
+
+    private int detectarFrames(BufferedImage spriteSheet) {
+        int width = spriteSheet.getWidth();
+        int height = spriteSheet.getHeight();
+        int count = 0;
+        boolean enFrame = false;
+
+        for (int x = 0; x < width; x++) {
+            boolean columnaVacia = true;
+
+            for (int y = 0; y < height; y++) {
+                int pixel = spriteSheet.getRGB(x, y);
+                if ((pixel >> 24) != 0x00) { // No transparente
+                    columnaVacia = false;
+                    break;
+                }
+            }
+
+            if (!columnaVacia && !enFrame) {
+                count++;
+                enFrame = true;
+            } else if (columnaVacia) {
+                enFrame = false;
+            }
+        }
+
+        return count;
     }
 }

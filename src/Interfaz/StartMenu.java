@@ -18,7 +18,7 @@ public class StartMenu {
     HashMap<String, Object> Menus = new HashMap<>();
     String selectedCharacter;
     String selectedBoss;
-    String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Elementor, the Forbidden Fire", "Sir Malrik, the Corrupted"};
+    String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Ashgore, The Last Ember of Wrath", "Sir Malrik, the Corrupted"};
     // TO-DO Hacer Boss_Class
     String[] Character_Class = {"N/A","Knight", "Tank", "Wizard", "Secret", "Dante"};
     private Font loadCustomFont(float size) {
