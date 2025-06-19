@@ -1,6 +1,7 @@
 import Interfaz.AnimationPanel;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TestAnimDynamic {
     public static void main(String[] args) {
@@ -11,6 +12,7 @@ public class TestAnimDynamic {
         AnimationPanel panel = new AnimationPanel("Bosses", "Corrupted_Boss", "Attack");
 
         frame.add(panel);
+        panel.setBackground(Color.black);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

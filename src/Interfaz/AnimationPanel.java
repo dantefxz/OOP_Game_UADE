@@ -66,8 +66,8 @@ public class AnimationPanel extends JPanel {
             int drawX = (panelWidth - frameWidth) / 2;
             int drawY = (panelHeight - frameHeight) / 2;
 
-            g.drawImage(spriteSheet.getSubimage(x, 0, frameWidth, frameHeight),
-                    drawX, drawY, frameWidth, frameHeight, null);
+            g.drawImage(spriteSheet.getSubimage(x, 0, frameWidth - 5, frameHeight),
+                    drawX, drawY, panelWidth - frameWidth, panelHeight - frameHeight, null);
         }
     }
 }
