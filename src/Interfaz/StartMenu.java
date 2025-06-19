@@ -2,6 +2,7 @@ package Interfaz;
 
 import Misc.DB;
 import Misc.Music;
+import Interfaz.GameMenu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,8 +19,26 @@ public class StartMenu {
     String selectedCharacter;
     String selectedBoss;
     String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Elementor, the Forbidden Fire", "Sir Malrik, the Corrupted"};
-    String[] Character_Name = {"N/A","Knight", "Tank", "Wizard", "Secret", "Dante"}; // Cambiar con File
+    // TO-DO Hacer Boss_Class
+    String[] Character_Class = {"N/A","Knight", "Tank", "Wizard", "Secret", "Dante"};
+    private Font loadCustomFont(float size) {
+        try {
+            URL fontUrl = getClass().getResource("/Assets/Fonts/Dungeon.ttf");
+            if (fontUrl == null) {
+                System.err.println("Fuente Dungeon no encontrada.");
+                return new Font("Serif", Font.BOLD, (int) size);
+            }
 
+            Font font = Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream());
+            font = font.deriveFont(size);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(font);
+            return font;
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+            return new Font("Serif", Font.BOLD, (int) size);
+        }
+    }
     public StartMenu(JFrame newMainMenu) throws IOException {
         Menus.put("MainMenu", newMainMenu);
         //Logo
@@ -74,25 +93,8 @@ public class StartMenu {
 
     }
     // Letra personalizada
-    private Font loadCustomFont(float size) {
-        try {
-            URL fontUrl = getClass().getResource("/Assets/Fonts/Dungeon.ttf");
-            if (fontUrl == null) {
-                System.err.println("Fuente Dungeon no encontrada.");
-                return new Font("Serif", Font.BOLD, (int) size);
-            }
 
-            Font font = Font.createFont(Font.TRUETYPE_FONT, fontUrl.openStream());
-            font = font.deriveFont(size);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(font);
-            return font;
-        } catch (IOException | FontFormatException e) {
-            e.printStackTrace();
-            return new Font("Serif", Font.BOLD, (int) size);
-        }
-    }
-    public JPanel CharacterMenu() throws IOException {
+    public void CharacterMenu() throws IOException {
         // Character selection
         JPanel CharacterLabel = new JPanel();
         CharacterLabel.setLayout(new BoxLayout(CharacterLabel, BoxLayout.X_AXIS));
@@ -127,7 +129,7 @@ public class StartMenu {
                 Character.setIcon(new ImageIcon(scaledImage));
             } else {
                 System.out.println("Imagen no encontrada para Character " + n + ": " + imagePath);
-                Character.setText(Character_Name[n]);
+                Character.setText(Character_Class[n]);
             }
 
 
@@ -149,12 +151,12 @@ public class StartMenu {
             if (n == 4) { // special character name
                 if (specialClass){
                     n = n +1;
-                    nameLabel = new JLabel(Character_Name[n]);
+                    nameLabel = new JLabel(Character_Class[n]);
                 }else{
-                    nameLabel = new JLabel(Character_Name[n]);
+                    nameLabel = new JLabel(Character_Class[n]);
                 }
             }else{
-                nameLabel = new JLabel(Character_Name[n]);
+                nameLabel = new JLabel(Character_Class[n]);
             }
 
             nameLabel.setForeground(Color.WHITE);
@@ -167,15 +169,16 @@ public class StartMenu {
 
             if (n == 4) {
                 if (specialClass) {
+                    int finalN1 = n;
                     Character.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            System.out.println("Character " + finalN);
+                            System.out.println(Character_Class[finalN1]);
                             JPanel currentMenu = (JPanel) Menus.get("CharacterMenu");
                             JFrame mainMenu = getMainMenu();
                             mainMenu.remove(currentMenu);
                             Menus.remove("CharacterMenu");
-                            selectedCharacter = "Character " + finalN;
+                            selectedCharacter = Character_Class[finalN1];
                             try {
                                 BossMenu();
                             } catch (IOException ex) {
@@ -193,12 +196,12 @@ public class StartMenu {
                 Character.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("Character " + finalN);
+                        System.out.println(Character_Class[finalN]);
                         JPanel currentMenu = (JPanel) Menus.get("CharacterMenu");
                         JFrame mainMenu = getMainMenu();
                         mainMenu.remove(currentMenu);
                         Menus.remove("CharacterMenu");
-                        selectedCharacter = "Character " + finalN;
+                        selectedCharacter = Character_Class[finalN];
                         try {
                             BossMenu();
                         } catch (IOException ex) {
@@ -221,7 +224,6 @@ public class StartMenu {
         mainMenu.add(CharacterLabel, BorderLayout.CENTER);
         Menus.put("CharacterMenu", CharacterLabel);
 
-        return CharacterLabel;
     }
     public void BossMenu() throws IOException {
         JFrame mainMenu = getMainMenu();
@@ -319,17 +321,19 @@ public class StartMenu {
                 Boss.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("Boss " + finalN);
+                        System.out.println(Boss_Name[finalN]);
                         System.out.println(Menus);
-                        selectedBoss = "Boss " + finalN;
+                        selectedBoss = Boss_Name[finalN];
                         System.out.println("Personaje: " + selectedCharacter + "\n Boss: " + selectedBoss);
                         //JPanel currentMenu = (JPanel) Menus.get("BossMenu");
                         JFrame mainMenu = getMainMenu();
-                        mainMenu.remove(BossLabel);
-                        mainMenu.remove(bottomPanel);
+                        mainMenu.getContentPane().removeAll();
                         Menus.remove("BossMenu");
+                        Menus.remove("MainMenu");
                         mainMenu.revalidate();
                         mainMenu.repaint();
+                        GameMenu gameMenu = new GameMenu(getMainMenu(), selectedCharacter, selectedBoss);
+                        Menus.put("GameMenu", gameMenu);
                     }
                 });
             }else{

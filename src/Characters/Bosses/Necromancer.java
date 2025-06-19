@@ -1,9 +1,9 @@
 package Characters.Bosses;
 
-import Characters.Character;
+import Characters.BaseCharacter;
 import Misc.AttackManager;
 
-public class Necromancer extends Character {
+public class Necromancer extends BaseCharacter {
     public Necromancer() {
         super("Mortuus, Master of the Undead" , 400);
         new AttackManager("Base_Atack", 40, 0, 0, 0);

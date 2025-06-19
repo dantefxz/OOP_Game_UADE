@@ -1,7 +1,7 @@
 package Misc;
 
 import Interfaces.IAttackManager;
-import Characters.Character;
+import Characters.BaseCharacter;
 
 // agregar interfaz
 public class AttackManager implements IAttackManager {
@@ -29,7 +29,7 @@ public class AttackManager implements IAttackManager {
     }
 
     @Override
-    public void execute(Character source, Character Enemy) {
+    public void execute(BaseCharacter source, BaseCharacter Enemy) {
         double finalDamage = this.damage;
         if (this.healing > 0){
             finalDamage = this.healing * -1;

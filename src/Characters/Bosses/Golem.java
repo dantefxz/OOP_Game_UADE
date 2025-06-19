@@ -1,8 +1,8 @@
 package Characters.Bosses;
-import Characters.Character;
+import Characters.BaseCharacter;
 import Misc.AttackManager;
 
-public class Golem extends Character {
+public class Golem extends BaseCharacter {
 
     public Golem() {
         super("Malphite, the King of the Mountains", 800);

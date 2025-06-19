@@ -1,9 +1,9 @@
 package Characters.Bosses;
 
-import Characters.Character;
+import Characters.BaseCharacter;
 import Misc.AttackManager;
 
-public class Corrupted extends Character {
+public class Corrupted extends BaseCharacter {
     public Corrupted() {
         super("Sir Malrik, the Corrupted", 800);
         new AttackManager("Base_Atack", 30, 0, 50,0);

@@ -1,9 +1,9 @@
 package Characters.Player;
 
-import Characters.Character;
+import Characters.BaseCharacter;
 import Misc.AttackManager;
 
-public class Wizard extends Character {
+public class Wizard extends BaseCharacter {
 
     public Wizard() {
         super("Wizard", 150);

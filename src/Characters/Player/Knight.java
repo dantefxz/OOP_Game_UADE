@@ -1,9 +1,9 @@
 package Characters.Player;
 
-import Characters.Character;
+import Characters.BaseCharacter;
 import Misc.AttackManager;
 
-public class Knight extends Character {
+public class Knight extends BaseCharacter {
     
     public Knight() {
         super("Knight", 250);

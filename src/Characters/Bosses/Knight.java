@@ -1,9 +1,9 @@
 package Characters.Bosses;
 
-import Characters.Character;
+import Characters.BaseCharacter;
 import Misc.AttackManager;
 
-public class Knight extends Character {
+public class Knight extends BaseCharacter {
     public Knight() {
         super("Sir Malrik, Champion of the Light", 350);
         new AttackManager("Base_Atack", 25, 0, 0, 0);

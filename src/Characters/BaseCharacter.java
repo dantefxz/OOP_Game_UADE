@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import Misc.Items;
 
-public abstract class Character {
+public abstract class BaseCharacter {
 
     String name;
     double maxHealth;
@@ -13,7 +13,7 @@ public abstract class Character {
     Map<String, AttackManager> attacksList = new HashMap<>();
     Map<String, Items> inventory = new HashMap<>();
 
-    public Character(String name, double maxHealth){
+    public BaseCharacter(String name, double maxHealth){
         this.name = name;
         this.maxHealth = maxHealth;
         this.health = this.maxHealth;
@@ -60,7 +60,7 @@ public abstract class Character {
         inventory.put(name, newItem);
     }
 
-    public void useItem(String name, Character objective){
+    public void useItem(String name, BaseCharacter objective){
         Items item = inventory.get(name);
         if (item.getHealing() > 0){
             double heal = item.getHealing() + objective.getHealth();

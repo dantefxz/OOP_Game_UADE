@@ -1,9 +1,9 @@
 package Characters.Bosses;
 
-import Characters.Character;
+import Characters.BaseCharacter;
 import Misc.AttackManager;
 
-public class Elemental extends Character {
+public class Elemental extends BaseCharacter {
     public Elemental() {
         super("Elementor, the Forbidden Fire", 600);
         new AttackManager("Base_Atack", 50, 0, 0,0);

@@ -1,9 +1,9 @@
 package Characters.Player;
 
-import Characters.Character;
+import Characters.BaseCharacter;
 import Misc.AttackManager;
 
-public class Dante extends Character {
+public class Dante extends BaseCharacter {
 
     public Dante() {
         super("Dante", 300);

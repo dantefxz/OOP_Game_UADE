@@ -1,8 +1,8 @@
 package Interfaces;
-import Characters.Character;
+import Characters.BaseCharacter;
 
 public interface IAttackManager {
     double critic(double damage, double ratePercentage);
-    void execute(Character source, Character Enemy);
+    void execute(BaseCharacter source, BaseCharacter Enemy);
     
 }

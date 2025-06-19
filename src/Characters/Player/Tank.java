@@ -1,11 +1,11 @@
 package Characters.Player;
 
 import Misc.AttackManager;
-import Characters.Character;
+import Characters.BaseCharacter;
 import java.util.Map;
 import java.util.HashMap;
 
-public class Tank extends Character {
+public class Tank extends BaseCharacter {
     int Shield;
     private boolean resistanceOn = false;
     private int resistanceDuration = 0;
