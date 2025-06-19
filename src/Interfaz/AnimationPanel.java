@@ -15,6 +15,10 @@ public class AnimationPanel extends JPanel {
     private int totalFrames;
     private Timer timer;
 
+    // Fijamos un tamaño estándar para el panel
+    private final int panelWidth = 256;
+    private final int panelHeight = 256;
+
     public AnimationPanel(String pj, String character, String animationName) {
         try {
             String path;
@@ -27,17 +31,17 @@ public class AnimationPanel extends JPanel {
             spriteSheet = ImageIO.read(new File(path));
 
             frameHeight = spriteSheet.getHeight();
-            frameWidth = frameHeight; // asumimos que los frames son cuadrados
-            totalFrames = spriteSheet.getWidth() / frameWidth;
+            totalFrames = spriteSheet.getWidth() / frameHeight;
+            frameWidth = spriteSheet.getWidth() / totalFrames;
 
-            // Animación automática
+            // Timer para animar automáticamente
             timer = new Timer(120, e -> {
                 currentFrame = (currentFrame + 1) % totalFrames;
                 repaint();
             });
             timer.start();
 
-            setPreferredSize(new Dimension(frameWidth, frameHeight));
+            setPreferredSize(new Dimension(panelWidth, panelHeight));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,9 +54,13 @@ public class AnimationPanel extends JPanel {
 
         if (spriteSheet != null) {
             int x = currentFrame * frameWidth;
-            // Se dibuja el frame actual en posición fija (0, 0)
+
+            // Centro del panel
+            int drawX = (panelWidth - frameWidth) / 2;
+            int drawY = (panelHeight - frameHeight) / 2;
+
             g.drawImage(spriteSheet.getSubimage(x, 0, frameWidth, frameHeight),
-                    0, 0, frameWidth, frameHeight, null);
+                    drawX, drawY, frameWidth, frameHeight, null);
         }
     }
 }
