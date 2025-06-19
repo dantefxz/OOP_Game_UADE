@@ -33,6 +33,7 @@ public class AnimationPanel extends JPanel {
 
             spriteSheet = ImageIO.read(new File(path));
 
+
             frameHeight = spriteSheet.getHeight();
             totalFrames = spriteSheet.getWidth() / frameHeight;
             frameWidth = spriteSheet.getWidth() / totalFrames;
@@ -62,12 +63,9 @@ public class AnimationPanel extends JPanel {
         if (spriteSheet != null) {
             int x = currentFrame * frameWidth;
 
-            // Centro del panel
-            int drawX = (panelWidth - frameWidth) / 2;
-            int drawY = (panelHeight - frameHeight) / 2;
-
-            g.drawImage(spriteSheet.getSubimage(x, 0, frameWidth - 5, frameHeight),
-                    drawX, drawY, panelWidth - frameWidth, panelHeight - frameHeight, null);
+            BufferedImage frame = spriteSheet.getSubimage(x, 0, frameWidth, frameHeight);
+            Image scaledFrame = frame.getScaledInstance(panelWidth, panelHeight, Image.SCALE_SMOOTH);
+            g.drawImage(scaledFrame, 0, 0, null);
         }
     }
 }
