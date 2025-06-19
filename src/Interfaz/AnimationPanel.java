@@ -14,6 +14,7 @@ public class AnimationPanel extends JPanel {
     private int currentFrame = 0;
     private int totalFrames;
     private Timer timer;
+    private boolean isBoss;
 
     // Fijamos un tamaño estándar para el panel
     private final int panelWidth = 256;
@@ -22,7 +23,9 @@ public class AnimationPanel extends JPanel {
     public AnimationPanel(String pj, String character, String animationName) {
         try {
             String path;
-            if (pj.equals("Bosses")) {
+            isBoss = pj.equals("Bosses");
+
+            if (isBoss) {
                 path = "src/Assets/Images/Sprites/Bosses/" + character + "/" + animationName + ".png";
             } else {
                 path = "src/Assets/Images/Sprites/Characters/" + character + "/" + animationName + ".png";
@@ -36,7 +39,11 @@ public class AnimationPanel extends JPanel {
 
             // Timer para animar automáticamente
             timer = new Timer(120, e -> {
-                currentFrame = (currentFrame + 1) % totalFrames;
+                if (isBoss) {
+                    currentFrame = (currentFrame - 1 + totalFrames) % totalFrames;
+                } else {
+                    currentFrame = (currentFrame + 1) % totalFrames;
+                }
                 repaint();
             });
             timer.start();
