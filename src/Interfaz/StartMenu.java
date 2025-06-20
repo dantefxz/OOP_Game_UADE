@@ -20,7 +20,7 @@ public class StartMenu {
     String selectedBoss;
     String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Ashgore, The Last Ember of Wrath", "Sir Malrik, the Corrupted"};
     // TO-DO Hacer Boss_Class
-    String[] Character_Class = {"N/A","Knight", "Tank", "Wizard", "Secret", "Dante"};
+    String[] Character_Class = {"N/A","Knight", "Tank", "Wizard", "Secret", "Cthulhu"};
     private Font loadCustomFont(float size) {
         try {
             URL fontUrl = getClass().getResource("/Assets/Fonts/Dungeon.ttf");

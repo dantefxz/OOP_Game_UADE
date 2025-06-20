@@ -9,7 +9,7 @@ public class TestAnimDynamic {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Usa cualquier animación que tengas: "Idle", "Run", "Attack1", etc.
-        AnimationPanel panel = new AnimationPanel("Bosses", "Demon_Boss", "Death");
+        AnimationPanel panel = new AnimationPanel("Characters", "Knight", "Attack");
 
         frame.add(panel);
         panel.setBackground(Color.black);
