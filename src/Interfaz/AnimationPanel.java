@@ -24,30 +24,28 @@ public class AnimationPanel extends JPanel {
         this.name = name;
         this.animation = animation;
 
+        Dimension fixedSize = new Dimension(getWidth(), getHeight());
+        setPreferredSize(fixedSize);
+        setMinimumSize(fixedSize);
+        setMaximumSize(fixedSize);
+        setOpaque(false);
+        setBounds(0, 0, fixedSize.width, fixedSize.height);
         try {
-            cargarAnimacion(folder, name, animation);
+            cargarAnimacion(animation);
         } catch (IOException e) {
             System.err.println("No se pudo cargar la animación: " + e.getMessage());
         }
     }
 
-    private void cargarAnimacion(String folder, String name, String animName) throws IOException {
+    public void cargarAnimacion(String animName) throws IOException {
         String path = "src/Assets/Images/Sprites/" + folder + "/" + name + "/" + animName + ".png";
         System.out.println("Cargando sprite desde: " + path);
-
+        String folder = this.folder;
+        String name = this.name;
         BufferedImage spriteSheet = ImageIO.read(new File(path));
         frames = cortarFrames(spriteSheet, folder.equalsIgnoreCase("Bosses"));
+        frames = normalizarFrames(frames);
 
-        int frameHeight = spriteSheet.getHeight();
-        int maxFrameWidth = 0;
-        for (BufferedImage frame : frames) {
-            if (frame.getWidth() > maxFrameWidth) {
-                maxFrameWidth = frame.getWidth();
-            }
-        }
-
-        setPreferredSize(new Dimension(maxFrameWidth, frameHeight));
-        setBackground(Color.BLACK);
 
         currentFrame = 0;
         loopingIdle = animName.equalsIgnoreCase("Idle");
@@ -57,13 +55,14 @@ public class AnimationPanel extends JPanel {
             currentFrame++;
             if (currentFrame >= frames.length) {
                 if (!loopingIdle) {
+                    // En vez de recargar la animación Idle, simplemente reseteamos currentFrame
                     try {
-                        cargarAnimacion(folder, name, "Idle");
+                        cargarAnimacion("Idle");
                     } catch (IOException ex) {
-                        System.err.println("No se pudo cargar Idle: " + ex.getMessage());
+                        throw new RuntimeException(ex);
                     }
                 } else {
-                    currentFrame = 0; // seguir en Idle
+                    currentFrame = 0; // seguir en Idle normalmente
                 }
             }
             repaint();
@@ -117,14 +116,42 @@ public class AnimationPanel extends JPanel {
         return frameList.toArray(new BufferedImage[0]);
     }
 
+    private BufferedImage[] normalizarFrames(BufferedImage[] frames) {
+        int maxWidth = 0;
+        int height = frames[0].getHeight();
+
+        // Encuentra el ancho máximo entre todos los frames
+        for (BufferedImage frame : frames) {
+            if (frame.getWidth() > maxWidth) {
+                maxWidth = frame.getWidth();
+            }
+        }
+
+        BufferedImage[] normalized = new BufferedImage[frames.length];
+
+        for (int i = 0; i < frames.length; i++) {
+            BufferedImage frame = frames[i];
+            if (frame.getWidth() == maxWidth) {
+                normalized[i] = frame; // Ya tiene el ancho correcto
+            } else {
+                // Crea una imagen vacía con ancho maxWidth y altura original, fondo transparente
+                BufferedImage newFrame = new BufferedImage(maxWidth, height, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2d = newFrame.createGraphics();
+                g2d.drawImage(frame, 0, 0, null); // Dibuja el frame original a la izquierda
+                g2d.dispose();
+                normalized[i] = newFrame;
+            }
+        }
+        return normalized;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (frames != null && frames[currentFrame] != null) {
             BufferedImage frame = frames[currentFrame];
-            int x = (getWidth() - frame.getWidth()) / 2;
-            int y = (getHeight() - frame.getHeight()) / 2;
-            g.drawImage(frame, x, y, null);
+            // Dibuja la imagen escalada al tamaño completo del panel (300x300)
+            g.drawImage(frame, 0, 0, getWidth(), getHeight(), null);
         }
     }
 }

@@ -19,8 +19,8 @@ public class StartMenu {
     String selectedCharacter;
     String selectedBoss;
     String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Ashgore, The Last Ember of Wrath", "Sir Malrik, the Corrupted"};
-    // TO-DO Hacer Boss_Class
-    String[] Character_Class = {"N/A","Knight", "Tank", "Wizard", "Secret", "Cthulhu"};
+    String[] Boss_Class = {"N/A", "Knight", "Golem", "Necromancer", "Demon", "Corrupted"};
+    String[] Character_Class = {"N/A","Warrior", "Tank", "Wizard", "Secret", "Cthulhu"};
     private Font loadCustomFont(float size) {
         try {
             URL fontUrl = getClass().getResource("/Assets/Fonts/Dungeon.ttf");
@@ -87,8 +87,7 @@ public class StartMenu {
         newMainMenu.setLayout(new BorderLayout());
         newMainMenu.add(topPanel, BorderLayout.NORTH);
       // Misc
-        Music musicPlayer = new Music();
-        musicPlayer.playMusicFromResource("/Assets/Sounds/MainMenu.wav");
+        Music.getInstance().playMusicFromResource("/Assets/Sounds/MainMenu.mp3");
         CharacterMenu();
 
     }
@@ -173,7 +172,6 @@ public class StartMenu {
                     Character.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            System.out.println(Character_Class[finalN1]);
                             JPanel currentMenu = (JPanel) Menus.get("CharacterMenu");
                             JFrame mainMenu = getMainMenu();
                             mainMenu.remove(currentMenu);
@@ -196,7 +194,6 @@ public class StartMenu {
                 Character.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println(Character_Class[finalN]);
                         JPanel currentMenu = (JPanel) Menus.get("CharacterMenu");
                         JFrame mainMenu = getMainMenu();
                         mainMenu.remove(currentMenu);
@@ -321,19 +318,16 @@ public class StartMenu {
                 Boss.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println(Boss_Name[finalN]);
-                        System.out.println(Menus);
-                        selectedBoss = Boss_Name[finalN];
-                        System.out.println("Personaje: " + selectedCharacter + "\n Boss: " + selectedBoss);
+                        selectedBoss = Boss_Class[finalN];
                         //JPanel currentMenu = (JPanel) Menus.get("BossMenu");
                         JFrame mainMenu = getMainMenu();
                         mainMenu.getContentPane().removeAll();
-                        Menus.remove("BossMenu");
-                        Menus.remove("MainMenu");
                         mainMenu.revalidate();
                         mainMenu.repaint();
                         GameMenu gameMenu = new GameMenu(getMainMenu(), selectedCharacter, selectedBoss);
                         Menus.put("GameMenu", gameMenu);
+                        Menus.remove("MainMenu");
+                        Menus.remove("BossMenu");
                     }
                 });
             }else{

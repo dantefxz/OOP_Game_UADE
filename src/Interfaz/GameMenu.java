@@ -1,24 +1,95 @@
 package Interfaz;
 
 import Characters.BaseCharacter;
+import Misc.Music;
+import Misc.BackgroundPanel;
 
 import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.net.URL;
 
 public class GameMenu {
+    private Image backgroundImage;
     public GameMenu(JFrame mainWindow, String selectedCharacter, String selectedBoss) {
-        String classPath = "Characters.Player." + selectedCharacter;
+        String characterPath = "Characters.Player." + selectedCharacter;
+        String bossPath = "Characters.Bosses." + selectedBoss;
         try {
             System.out.println(selectedCharacter + selectedBoss);
-            Class<?> foundClass = Class.forName(classPath);
-            Object character = foundClass.getDeclaredConstructor().newInstance();
+            Class<?> foundCharacter = Class.forName(characterPath);
+            BaseCharacter character = (BaseCharacter) foundCharacter.getDeclaredConstructor().newInstance();
 
-            // Character creado
+            Class<?> foundBoss = Class.forName(bossPath);
+            BaseCharacter boss = (BaseCharacter) foundBoss.getDeclaredConstructor().newInstance();
 
-            // Falta el boss (Pasar selectedBoss como clase)
+            BackgroundPanel backgroundPanel = new BackgroundPanel("/Assets/Images/Sprites/Background/"+selectedBoss+".png");
+            backgroundPanel.setLayout(null);
+            mainWindow.setContentPane(backgroundPanel);
 
+            AnimationPanel characterSprite = getCharacterSprite(selectedCharacter, "Idle");
+            backgroundPanel.add(characterSprite);
+
+
+            AnimationPanel bossSprite = getBossSprite(selectedBoss, "Idle");
+            backgroundPanel.add(bossSprite);
+
+
+            mainWindow.repaint();
+            mainWindow.revalidate();
+            mainWindow.pack();
+            //bossSprite.cargarAnimacion("Attack");
+            Music.getInstance().stopMusic();
+            Music.getInstance().playMusicFromResource("/Assets/Sounds/"+selectedBoss+".mp3");
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static AnimationPanel getBossSprite(String selectedBoss, String animationName) {
+        AnimationPanel bossSprite = new AnimationPanel("Bosses", selectedBoss, animationName);
+        switch (selectedBoss) {
+            case "Golem":
+                bossSprite.setBounds(700, -180, 300 * 3, 300 * 3);
+                break;
+            case "Demon":
+                bossSprite.setBounds(700, -300, 300 * 3, 300 * 3);
+                break;
+            case "Knight":
+                bossSprite.setBounds(700, 175, 300 * 2, 300 * 2);
+                break;
+            case "Necromancer":
+                bossSprite.setBounds(700, 100, 300 * 2, 300 * 2);
+                break;
+            case "Corrupted":
+                bossSprite.setBounds(700, 130, 300, 300);
+                break;
+            default:
+                bossSprite.setBounds(700, 700, 300, 300);
+                break;
+        }
+        return bossSprite;
+    }
+
+
+    private static AnimationPanel getCharacterSprite(String selectedCharacter, String animationName) {
+        AnimationPanel characterSprite = new AnimationPanel("Characters", selectedCharacter, animationName);
+        switch (selectedCharacter) {
+            case "Warrior":
+                characterSprite.setBounds(200, 250, 300, 300);
+                break;
+            case "Tank":
+                characterSprite.setBounds(200, 250, 300, 300);
+                break;
+            case "Wizard":
+                characterSprite.setBounds(200, 250, 300, 300);
+                break;
+            case "Cthulhu":
+                characterSprite.setBounds(200, -300, 300 * 3, 300 * 3);
+                break;
+            default:
+                characterSprite.setBounds(100, 700, 300, 300);
+                break;
+        }
+        return characterSprite;
     }
 }
