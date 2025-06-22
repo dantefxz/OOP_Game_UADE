@@ -11,6 +11,7 @@ import java.net.URL;
 
 public class GameMenu {
     private Image backgroundImage;
+
     public GameMenu(JFrame mainWindow, String selectedCharacter, String selectedBoss) {
         String characterPath = "Characters.Player." + selectedCharacter;
         String bossPath = "Characters.Bosses." + selectedBoss;
@@ -22,16 +23,28 @@ public class GameMenu {
             Class<?> foundBoss = Class.forName(bossPath);
             BaseCharacter boss = (BaseCharacter) foundBoss.getDeclaredConstructor().newInstance();
 
-            BackgroundPanel backgroundPanel = new BackgroundPanel("/Assets/Images/Sprites/Background/"+selectedBoss+".png");
+            BackgroundPanel backgroundPanel = new BackgroundPanel("/Assets/Images/Sprites/Background/" + selectedBoss + ".png");
             backgroundPanel.setLayout(null);
             mainWindow.setContentPane(backgroundPanel);
 
             AnimationPanel characterSprite = getCharacterSprite(selectedCharacter, "Idle");
             backgroundPanel.add(characterSprite);
 
-
-            AnimationPanel bossSprite = getBossSprite(selectedBoss, "Idle");
+            String Animation = "SpecialAttack";
+            AnimationPanel bossSprite = getBossSprite(selectedBoss, Animation);
             backgroundPanel.add(bossSprite);
+            if (selectedBoss.equals("Necromancer")) {
+                if (Animation.equals("Attack")) {
+                    AnimationPanel Spell = getNecrmancerAttack(selectedCharacter,selectedBoss, "AttackSpell");
+                    Spell.setParentContainer(backgroundPanel);
+                    backgroundPanel.add(Spell);
+                }
+                if (Animation.equals("SpecialAttack")) {
+                    AnimationPanel Spell = getNecrmancerAttack(selectedCharacter, selectedBoss,"SpecialAttackSpell");
+                    Spell.setParentContainer(backgroundPanel);
+                    backgroundPanel.add(Spell);
+                }
+            }
 
 
             mainWindow.repaint();
@@ -39,7 +52,7 @@ public class GameMenu {
             mainWindow.pack();
             //bossSprite.cargarAnimacion("Attack");
             Music.getInstance().stopMusic();
-            Music.getInstance().playMusicFromResource("/Assets/Sounds/"+selectedBoss+".mp3");
+            Music.getInstance().playMusicFromResource("/Assets/Sounds/" + selectedBoss + ".mp3");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,7 +84,7 @@ public class GameMenu {
     }
 
 
-    private static AnimationPanel getCharacterSprite(String selectedCharacter, String animationName) {
+    private static AnimationPanel getCharacterSprite(String selectedCharacter,  String animationName) {
         AnimationPanel characterSprite = new AnimationPanel("Characters", selectedCharacter, animationName);
         switch (selectedCharacter) {
             case "Warrior":
@@ -91,5 +104,20 @@ public class GameMenu {
                 break;
         }
         return characterSprite;
+    }
+
+
+    private static AnimationPanel getNecrmancerAttack(String selectedCharacter, String selectedBoss, String animationName) {
+        AnimationPanel spellsprite = new AnimationPanel("Bosses", selectedBoss, animationName);
+        switch (selectedCharacter) {
+            case "AttackSpell":
+                spellsprite.setBounds(400, 250, 150, 150);
+            case "SpecialAttackSpell":
+                spellsprite.setBounds(300, 800, 150, 150);
+            default:
+                spellsprite.setBounds(200, 250, 150, 150);
+                break;
+        }
+        return spellsprite;
     }
 }

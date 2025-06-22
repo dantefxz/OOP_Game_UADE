@@ -19,6 +19,8 @@ public class AnimationPanel extends JPanel {
 
     private boolean loopingIdle = false;
 
+    private Container parentContainer; // para auto-remover el panel
+
     public AnimationPanel(String folder, String name, String animation) {
         this.folder = folder;
         this.name = name;
@@ -37,6 +39,10 @@ public class AnimationPanel extends JPanel {
         }
     }
 
+    public void setParentContainer(Container parent) {
+        this.parentContainer = parent;
+    }
+
     public void cargarAnimacion(String animName) throws IOException {
         String path = "src/Assets/Images/Sprites/" + folder + "/" + name + "/" + animName + ".png";
         System.out.println("Cargando sprite desde: " + path);
@@ -46,23 +52,27 @@ public class AnimationPanel extends JPanel {
         frames = cortarFrames(spriteSheet, folder.equalsIgnoreCase("Bosses"));
         frames = normalizarFrames(frames);
 
-
         currentFrame = 0;
         loopingIdle = animName.equalsIgnoreCase("Idle");
 
-        if (timer != null) timer.stop(); // reiniciar si ya existía
+        if (timer != null) timer.stop();
         timer = new Timer(100, e -> {
             currentFrame++;
             if (currentFrame >= frames.length) {
-                if (!loopingIdle) {
-                    // En vez de recargar la animación Idle, simplemente reseteamos currentFrame
+                if (loopingIdle) {
+                    currentFrame = 0;
+                } else if (animation.equalsIgnoreCase("AttackSpell") || animation.equalsIgnoreCase("SpecialAttackSpell")) {
+                    timer.stop();
+                    if (parentContainer != null) {
+                        parentContainer.remove(this);
+                        parentContainer.repaint();
+                    }
+                } else {
                     try {
                         cargarAnimacion("Idle");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
-                } else {
-                    currentFrame = 0; // seguir en Idle normalmente
                 }
             }
             repaint();
@@ -120,7 +130,6 @@ public class AnimationPanel extends JPanel {
         int maxWidth = 0;
         int height = frames[0].getHeight();
 
-        // Encuentra el ancho máximo entre todos los frames
         for (BufferedImage frame : frames) {
             if (frame.getWidth() > maxWidth) {
                 maxWidth = frame.getWidth();
@@ -128,16 +137,14 @@ public class AnimationPanel extends JPanel {
         }
 
         BufferedImage[] normalized = new BufferedImage[frames.length];
-
         for (int i = 0; i < frames.length; i++) {
             BufferedImage frame = frames[i];
             if (frame.getWidth() == maxWidth) {
-                normalized[i] = frame; // Ya tiene el ancho correcto
+                normalized[i] = frame;
             } else {
-                // Crea una imagen vacía con ancho maxWidth y altura original, fondo transparente
                 BufferedImage newFrame = new BufferedImage(maxWidth, height, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g2d = newFrame.createGraphics();
-                g2d.drawImage(frame, 0, 0, null); // Dibuja el frame original a la izquierda
+                g2d.drawImage(frame, 0, 0, null);
                 g2d.dispose();
                 normalized[i] = newFrame;
             }
@@ -148,9 +155,8 @@ public class AnimationPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (frames != null && frames[currentFrame] != null) {
+        if (frames != null && currentFrame < frames.length && frames[currentFrame] != null) {
             BufferedImage frame = frames[currentFrame];
-            // Dibuja la imagen escalada al tamaño completo del panel (300x300)
             g.drawImage(frame, 0, 0, getWidth(), getHeight(), null);
         }
     }
