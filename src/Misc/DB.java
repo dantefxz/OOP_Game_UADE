@@ -63,20 +63,4 @@ public class DB {
         db.put("hasSpecialClass", unlocked);
         save();
     }
-
-    // --- Método main para pruebas ---
-    public static void main(String[] args) throws IOException {
-        DB db = new DB();
-
-        System.out.println("Bosses derrotados: " + db.getBossesDefeated());
-        System.out.println("Clase especial desbloqueada: " + db.hasSpecialClass());
-
-        //db.addBossDefeated(3);
-
-        //db.setSpecialClassUnlocked(true);
-
-        System.out.println("Datos actualizados:");
-        System.out.println("Bosses derrotados: " + db.getBossesDefeated());
-        System.out.println("Clase especial desbloqueada: " + db.hasSpecialClass());
-    }
 }
