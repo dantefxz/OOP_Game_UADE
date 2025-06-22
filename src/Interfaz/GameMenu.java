@@ -30,22 +30,21 @@ public class GameMenu {
             AnimationPanel characterSprite = getCharacterSprite(selectedCharacter, "Idle");
             backgroundPanel.add(characterSprite);
 
-            String Animation = "SpecialAttack";
-            AnimationPanel bossSprite = getBossSprite(selectedBoss, Animation);
+            AnimationPanel bossSprite = getBossSprite(selectedBoss, "Idle");
             backgroundPanel.add(bossSprite);
+
+            String Animation = "Attack";
             if (selectedBoss.equals("Necromancer")) {
+                bossSprite.loadAnimation(Animation);
                 if (Animation.equals("Attack")) {
-                    AnimationPanel Spell = getNecrmancerAttack(selectedCharacter,selectedBoss, "AttackSpell");
-                    Spell.setParentContainer(backgroundPanel);
+                    AnimationPanel Spell = getNecromancerAttack(selectedBoss, "AttackSpell");
                     backgroundPanel.add(Spell);
                 }
                 if (Animation.equals("SpecialAttack")) {
-                    AnimationPanel Spell = getNecrmancerAttack(selectedCharacter, selectedBoss,"SpecialAttackSpell");
-                    Spell.setParentContainer(backgroundPanel);
+                    AnimationPanel Spell = getNecromancerAttack(selectedBoss,"SpecialAttackSpell");
                     backgroundPanel.add(Spell);
                 }
             }
-
 
             mainWindow.repaint();
             mainWindow.revalidate();
@@ -87,33 +86,26 @@ public class GameMenu {
     private static AnimationPanel getCharacterSprite(String selectedCharacter,  String animationName) {
         AnimationPanel characterSprite = new AnimationPanel("Characters", selectedCharacter, animationName);
         switch (selectedCharacter) {
-            case "Warrior":
-                characterSprite.setBounds(200, 250, 300, 300);
-                break;
-            case "Tank":
-                characterSprite.setBounds(200, 250, 300, 300);
-                break;
-            case "Wizard":
+            case "Warrior", "Tank", "Wizard":
                 characterSprite.setBounds(200, 250, 300, 300);
                 break;
             case "Cthulhu":
                 characterSprite.setBounds(200, -300, 300 * 3, 300 * 3);
-                break;
-            default:
-                characterSprite.setBounds(100, 700, 300, 300);
                 break;
         }
         return characterSprite;
     }
 
 
-    private static AnimationPanel getNecrmancerAttack(String selectedCharacter, String selectedBoss, String animationName) {
+    private static AnimationPanel getNecromancerAttack(String selectedBoss, String animationName) {
         AnimationPanel spellsprite = new AnimationPanel("Bosses", selectedBoss, animationName);
-        switch (selectedCharacter) {
+        switch (animationName) {
             case "AttackSpell":
-                spellsprite.setBounds(400, 250, 150, 150);
+                spellsprite.setBounds(150, 200, 300, 300);
+                break;
             case "SpecialAttackSpell":
-                spellsprite.setBounds(300, 800, 150, 150);
+                spellsprite.setBounds(245, 350, 150, 150);
+                break;
             default:
                 spellsprite.setBounds(200, 250, 150, 150);
                 break;

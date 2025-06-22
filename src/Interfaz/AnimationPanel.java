@@ -33,7 +33,7 @@ public class AnimationPanel extends JPanel {
         setOpaque(false);
         setBounds(0, 0, fixedSize.width, fixedSize.height);
         try {
-            cargarAnimacion(animation);
+            loadAnimation(animation);
         } catch (IOException e) {
             System.err.println("No se pudo cargar la animación: " + e.getMessage());
         }
@@ -43,11 +43,11 @@ public class AnimationPanel extends JPanel {
         this.parentContainer = parent;
     }
 
-    public void cargarAnimacion(String animName) throws IOException {
+    public void loadAnimation(String animName) throws IOException {
+        String name = this.name;
+        String folder = this.folder;
         String path = "src/Assets/Images/Sprites/" + folder + "/" + name + "/" + animName + ".png";
         System.out.println("Cargando sprite desde: " + path);
-        String folder = this.folder;
-        String name = this.name;
         BufferedImage spriteSheet = ImageIO.read(new File(path));
         frames = cortarFrames(spriteSheet, folder.equalsIgnoreCase("Bosses"));
         frames = normalizarFrames(frames);
@@ -69,7 +69,7 @@ public class AnimationPanel extends JPanel {
                     }
                 } else {
                     try {
-                        cargarAnimacion("Idle");
+                        loadAnimation("Idle");
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }

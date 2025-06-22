@@ -4,8 +4,6 @@ import java.awt.*;
 import java.net.URL;
 import Misc.DB;
 import java.io.IOException;
-import Characters.Bosses.*;
-import Characters.Player.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
