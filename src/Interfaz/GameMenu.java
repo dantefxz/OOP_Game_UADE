@@ -27,13 +27,14 @@ public class GameMenu {
             backgroundPanel.setLayout(null);
             mainWindow.setContentPane(backgroundPanel);
 
-            AnimationPanel characterSprite = getCharacterSprite(selectedCharacter, "Idle");
+            AnimationPanel characterSprite = getCharacterSprite(selectedCharacter, "SpecialAttack");
             backgroundPanel.add(characterSprite);
 
             AnimationPanel bossSprite = getBossSprite(selectedBoss, "Idle");
             backgroundPanel.add(bossSprite);
 
             String Animation = "Attack";
+
             if (selectedBoss.equals("Necromancer")) {
                 bossSprite.loadAnimation(Animation);
                 if (Animation.equals("Attack")) {
@@ -73,7 +74,7 @@ public class GameMenu {
                 bossSprite.setBounds(700, 100, 300 * 2, 300 * 2);
                 break;
             case "Corrupted":
-                bossSprite.setBounds(700, 130, 300, 300);
+                bossSprite.setBounds(700, 345, 300, 300);
                 break;
             default:
                 bossSprite.setBounds(700, 700, 300, 300);
