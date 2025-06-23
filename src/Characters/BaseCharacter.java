@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import Misc.Items;
 
-public abstract class BaseCharacter {
+public abstract class BaseCharacter{
 
     String name;
     double maxHealth;
@@ -39,13 +39,17 @@ public abstract class BaseCharacter {
         } else {
             System.out.println(this.getName() + "'s health is " + this.getHealth());
         }
-
+        System.out.println(this.getName() + this.getHealth());
         if (damage < 0) { // Healing
             double finalHealing = damage * -1;
             double nuevaVida = this.getHealth() + (finalHealing);
             this.setHealth(nuevaVida);
             System.out.println(this.getName() + " se curó " + finalHealing + " de vida. Nueva vida: " + nuevaVida);
         }
+    }
+
+    public Map<String, AttackManager> getAttacksList(){
+        return attacksList;
     }
 
     public void createAttack(String name, double damage, double healing, double criticRate, int turns){

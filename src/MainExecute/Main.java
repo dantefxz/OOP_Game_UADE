@@ -1,3 +1,5 @@
+package MainExecute;
+
 import Interfaz.*;
 import javax.swing.*;
 import java.awt.*;
@@ -6,9 +8,10 @@ import Misc.DB;
 import java.io.IOException;
 
 public class Main {
+    static JFrame mainWindow;
     public static void main(String[] args) throws IOException {
         // Create Window
-        JFrame mainWindow = new JFrame("Elden Ring²: Java Edition");
+        mainWindow = new JFrame("Elden Ring²: Java Edition");
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         URL iconURL = Main.class.getResource("/Assets/Images/logo.png");
@@ -35,8 +38,9 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-
-
+    public static JFrame getMainWindow(){
+        return mainWindow;
     }
 }
