@@ -39,4 +39,8 @@ public class AttackManager implements IAttackManager {
         source.checkAbility(name);
         Enemy.takeDamage(finalDamage);
     }
+
+    public String getName() {
+        return this.name;
+    }
 }

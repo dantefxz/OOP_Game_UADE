@@ -1,13 +1,14 @@
 package Interfaz;
 
 import Characters.BaseCharacter;
+import Misc.AttackManager;
 import Misc.Music;
 import Misc.BackgroundPanel;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.net.URL;
+import Misc.setKeybinding;
+import java.util.Map;
 
 public class GameMenu {
     private Image backgroundImage;
@@ -19,6 +20,7 @@ public class GameMenu {
             System.out.println(selectedCharacter + selectedBoss);
             Class<?> foundCharacter = Class.forName(characterPath);
             BaseCharacter character = (BaseCharacter) foundCharacter.getDeclaredConstructor().newInstance();
+            System.out.println(character.getAttacksList());
 
             Class<?> foundBoss = Class.forName(bossPath);
             BaseCharacter boss = (BaseCharacter) foundBoss.getDeclaredConstructor().newInstance();
@@ -26,31 +28,31 @@ public class GameMenu {
             BackgroundPanel backgroundPanel = new BackgroundPanel("/Assets/Images/Sprites/Background/" + selectedBoss + ".png");
             backgroundPanel.setLayout(null);
             mainWindow.setContentPane(backgroundPanel);
+            mainWindow.pack();
 
-            AnimationPanel characterSprite = getCharacterSprite(selectedCharacter, "SpecialAttack");
+            AnimationPanel characterSprite = getCharacterSprite(selectedCharacter, "Idle");
             backgroundPanel.add(characterSprite);
 
             AnimationPanel bossSprite = getBossSprite(selectedBoss, "Idle");
             backgroundPanel.add(bossSprite);
 
-            String Animation = "Attack";
+            JPanel skillList = createSkillList(character);
+            skillList.setBounds(400, 100, 200, 80);
+            backgroundPanel.add(skillList);
 
-            if (selectedBoss.equals("Necromancer")) {
-                bossSprite.loadAnimation(Animation);
-                if (Animation.equals("Attack")) {
-                    AnimationPanel Spell = getNecromancerAttack(selectedBoss, "AttackSpell");
-                    backgroundPanel.add(Spell);
-                }
-                if (Animation.equals("SpecialAttack")) {
-                    AnimationPanel Spell = getNecromancerAttack(selectedBoss,"SpecialAttackSpell");
-                    backgroundPanel.add(Spell);
-                }
-            }
+            new setKeybinding(skillList, character, characterSprite, boss);
+
+            JLabel textLabel = createTextLabel();
+            textLabel.setText("Testando aodisdiusjoaf");
+            textLabel.setBounds(360, 560, 800, 80);
+            textLabel.setForeground(Color.white);
+            textLabel.setFont(new Font("Arial", Font.BOLD, 35));
+            backgroundPanel.add(textLabel);
 
             mainWindow.repaint();
             mainWindow.revalidate();
-            mainWindow.pack();
-            //bossSprite.cargarAnimacion("Attack");
+
+
             Music.getInstance().stopMusic();
             Music.getInstance().playMusicFromResource("/Assets/Sounds/" + selectedBoss + ".mp3");
         } catch (Exception e) {
@@ -112,5 +114,28 @@ public class GameMenu {
                 break;
         }
         return spellsprite;
+    }
+
+    private static JPanel createSkillList(BaseCharacter selectedCharacter){
+        JPanel skillList = new JPanel();
+        skillList.setOpaque(true);
+        skillList.setBackground(Color.white);
+        skillList.setLayout(new GridLayout(5,2));
+        Map<String, AttackManager> attackList = selectedCharacter.getAttacksList();
+
+        int currentKey = 0;
+        for (Map.Entry<String, AttackManager> entry : attackList.entrySet()) {
+            currentKey += 1;
+            String attackName = entry.getKey();
+            AttackManager attackData = entry.getValue();
+            JLabel attackLabel = new JLabel(currentKey + " - "+ attackName);
+            skillList.add(attackLabel);
+        }
+
+        return skillList;
+    }
+
+    private static JLabel createTextLabel(){
+        return new JLabel();
     }
 }
