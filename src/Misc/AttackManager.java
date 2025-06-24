@@ -23,7 +23,6 @@ public class AttackManager implements IAttackManager {
     public double critic(double damage, double criticRate){
         if (Math.random() * 100 < criticRate) {
             damage *= 1.5;
-            System.out.println("Critical hit!");
         }
         return damage;
     }
@@ -42,5 +41,25 @@ public class AttackManager implements IAttackManager {
 
     public String getName() {
         return this.name;
+    }
+
+    public double getDamage(){
+        return this.damage;
+    }
+
+    public int getTurns(){
+        return this.turns;
+    }
+
+    public void setTurns(int turn){
+        this.turns = turn;
+    }
+
+    public int subtractTurns(){
+        this.turns -= 1;
+        if (this.turns < 0){
+            this.turns = 0;
+        }
+        return this.turns;
     }
 }

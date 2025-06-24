@@ -9,9 +9,12 @@ import javax.swing.*;
 import java.awt.*;
 import Misc.setKeybinding;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GameMenu {
     private Image backgroundImage;
+    static List<JLabel> attackLabels = new ArrayList<>();
 
     public GameMenu(JFrame mainWindow, String selectedCharacter, String selectedBoss) {
         String characterPath = "Characters.Player." + selectedCharacter;
@@ -40,14 +43,14 @@ public class GameMenu {
             skillList.setBounds(400, 100, 200, 80);
             backgroundPanel.add(skillList);
 
-            new setKeybinding(skillList, character, characterSprite, boss);
-
             JLabel textLabel = createTextLabel();
             textLabel.setText("Testando aodisdiusjoaf");
-            textLabel.setBounds(360, 560, 800, 80);
+            textLabel.setBounds(160, 560, 5000, 80);
             textLabel.setForeground(Color.white);
-            textLabel.setFont(new Font("Arial", Font.BOLD, 35));
+            textLabel.setFont(new Font("Arial", Font.BOLD, 25));
             backgroundPanel.add(textLabel);
+
+            new setKeybinding(skillList, textLabel, attackLabels, character, characterSprite, boss);
 
             mainWindow.repaint();
             mainWindow.revalidate();
@@ -122,14 +125,13 @@ public class GameMenu {
         skillList.setBackground(Color.white);
         skillList.setLayout(new GridLayout(5,2));
         Map<String, AttackManager> attackList = selectedCharacter.getAttacksList();
-
         int currentKey = 0;
         for (Map.Entry<String, AttackManager> entry : attackList.entrySet()) {
             currentKey += 1;
             String attackName = entry.getKey();
-            AttackManager attackData = entry.getValue();
             JLabel attackLabel = new JLabel(currentKey + " - "+ attackName);
             skillList.add(attackLabel);
+            attackLabels.add(attackLabel);
         }
 
         return skillList;

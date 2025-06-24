@@ -19,7 +19,6 @@ public class Main {
         ImageIcon logo = new ImageIcon(iconURL);
         mainWindow.setIconImage(logo.getImage());
 
-
         mainWindow.setPreferredSize(new Dimension(1280, 720));
         mainWindow.setResizable(false);
         mainWindow.pack();
