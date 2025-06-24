@@ -13,9 +13,9 @@ public class Tank extends BaseCharacter {
 
     public Tank() {
         super("Tank", 400);
-        new AttackManager("Base_Attack", 20, 0, 15, 0);
-        new AttackManager("Heavy_Attack", 50, 0, 35, 3);
-        new AttackManager("Ult_Resistance", 0, 20,0, 5);
+        this.createAttack("Attack", 20, 0, 15, 0);
+        this.createAttack("SpecialAttack", 50, 0, 35, 3);
+        this.createAttack("Ult_Resistance", 0, 20,0, 5);
     }
 
     private void increaseResistance(){

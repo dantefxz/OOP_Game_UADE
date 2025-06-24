@@ -21,8 +21,11 @@ public class StartMenu {
     String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Ashgore, The Last Ember of Wrath", "Sir Malrik, the Corrupted"};
     String[] Boss_Class = {"N/A", "Knight", "Golem", "Necromancer", "Demon", "Corrupted"};
     String[] Character_Class = {"N/A","Warrior", "Tank", "Wizard", "Secret", "Cthulhu"};
+
+    //Esta funcion tiene como objetico cargar la la letra para luego poder usarla
     private Font loadCustomFont(float size) {
         try {
+            //Aca busca la fuente y si no la encuentra auto asigna la Serif
             URL fontUrl = getClass().getResource("/Assets/Fonts/Dungeon.ttf");
             if (fontUrl == null) {
                 System.err.println("Fuente Dungeon no encontrada.");
@@ -91,17 +94,15 @@ public class StartMenu {
         CharacterMenu();
 
     }
-    // Letra personalizada
-
     public void CharacterMenu() throws IOException {
-        // Character selection
+        // Character selection, seleccion de personaje
         JPanel CharacterLabel = new JPanel();
         CharacterLabel.setLayout(new BoxLayout(CharacterLabel, BoxLayout.X_AXIS));
         CharacterLabel.setBackground(Color.BLACK);
         CharacterLabel.setPreferredSize(new Dimension(150, 150));
         CharacterLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         Dimension buttonSize = new Dimension(210, 360);
-
+        //Intera la cantidad de personajes
         for (int n = 1; n < 5; n++) {
             JPanel characterPanel = new JPanel();
             characterPanel.setLayout(new BoxLayout(characterPanel, BoxLayout.Y_AXIS));
@@ -111,13 +112,14 @@ public class StartMenu {
             String imagePath;
             DB currentDB = new DB();
             boolean specialClass = currentDB.hasSpecialClass();
-            if (n == 4) { // special character Sprite
+            if (n == 4) { // Verifica si tiene el personaje especial
                 if (specialClass){
                     imagePath = "/Assets/Images/Sprites/Characters/Player" + n + "_preview.png";
                 } else {
                     imagePath = "/Assets/Images/Sprites/Characters/Secret.png";
                 }
             }else{
+                //Muestra la imagen del personaje
                 imagePath = "/Assets/Images/Sprites/Characters/Player" + n + "_preview.png";
             }
             URL imageUrl = StartMenu.class.getResource(imagePath);
@@ -127,6 +129,7 @@ public class StartMenu {
                 Image scaledImage = characterIcon.getImage().getScaledInstance(buttonSize.width, buttonSize.height, Image.SCALE_SMOOTH);
                 Character.setIcon(new ImageIcon(scaledImage));
             } else {
+                //Muestra el nombre del personaje en consola y en JFrame
                 System.out.println("Imagen no encontrada para Character " + n + ": " + imagePath);
                 Character.setText(Character_Class[n]);
             }
