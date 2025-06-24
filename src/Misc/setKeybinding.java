@@ -59,36 +59,18 @@ public class setKeybinding {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         AttackManager attack = orderedAttacks.get(index);
-                        if (attack.getTurns() > 1) {
+                        if (attack.getTurns() > 0) {
                             textLabel.setText("No se puede ejecutar. Turnos: " + attack.getTurns());
-                            attackLabels.get(index).setForeground(Color.RED);
                             return;
                         }
-                        System.out.println("Ejecutando ataque: " + attack.getName());
-                        attackLabels.get(index).setForeground(Color.WHITE);
-                        double oldBossHealth = selectedBoss.getHealth();
-                        attack.execute(selectedCharacter, selectedBoss);
-                        double characterHealth = selectedCharacter.getHealth();
-                        double bossHealth = selectedBoss.getHealth();
-                        boolean critic = (oldBossHealth - bossHealth) > attack.getDamage();
-                        textLabel.setText(selectedCharacter.getName() + " (" + characterHealth+") Atacó a "+selectedBoss.getName()+" ("+oldBossHealth+") -> ("+bossHealth+")");
-                        if (critic && bossHealth != 0){
-                            textLabel.setText(textLabel.getText() + " CRÍTICO");
-                        }
+                        executeAttack(selectedCharacter, selectedBoss, attack, textLabel, currentLabel, key);
 
-                        if (OGTurns > 0){
+                        if (OGTurns > 0){ // Si los turnos originales son 0 y esto se lee, significa que se ejecutó, por ende reiniciar turnos.
                             attack.setTurns(OGTurns);
-                            attackLabels.get(index).setForeground(Color.RED);
-                            currentLabel.setText(key + " - "+ attack.getName() + "("+attack.getTurns()+")");
                         }
 
-                        // para todos :v
-                        currentLabel.setText(key + " - "+ attack.getName() + "("+attack.getTurns()+")");
-                        if (attack.getTurns() > 1){
-                            attackLabels.get(index).setForeground(Color.RED);
-                        } else {
-                            attackLabels.get(index).setForeground(Color.BLACK);
-                        }
+                        updateSkillList(orderedAttacks, attackLabels);
+
 
                         try {
                             characterSprite.loadAnimation(attack.getName());
@@ -108,5 +90,41 @@ public class setKeybinding {
 
         inputMap.clear();
         actionMap.clear();
+    }
+
+    private static void executeAttack(BaseCharacter origin, BaseCharacter target, AttackManager attack, JLabel textLabel, JLabel currentLabel, String key){
+        double oldTargetHealth = target.getHealth();
+        attack.execute(origin, target);
+        double originHealth = origin.getHealth();
+        double targetHealth = target.getHealth();
+        boolean critic = (oldTargetHealth - targetHealth) > attack.getDamage();
+        textLabel.setText(origin.getName() + " (" + originHealth+") Atacó a "+target.getName()+" ("+oldTargetHealth+") -> ("+targetHealth+")");
+        if (critic && targetHealth != 0){
+            textLabel.setText(textLabel.getText() + " CRÍTICO");
+        }
+
+        // Para el jugador
+        for (Map.Entry<String, AttackManager> entry : origin.getAttacksList().entrySet()) {
+            AttackManager attackValue = entry.getValue();
+            if (attackValue.getTurns() > 0) {
+                attackValue.subtractTurn();
+            }
+
+        }
+    }
+
+    private static void updateSkillList(List<AttackManager> orderedAttacks, List<JLabel> attackLabels){
+        for (int i = 0; i < orderedAttacks.size(); i++) {
+            int index = i;
+            String key = String.valueOf(i + 1);
+            AttackManager attack = orderedAttacks.get(index);
+            JLabel currentLabel = attackLabels.get(index);
+            currentLabel.setText(key + " - " + attack.getName() + "(" + attack.getTurns() + ")");
+            if (attack.getTurns() > 0) {
+                attackLabels.get(index).setForeground(Color.RED);
+            } else {
+                attackLabels.get(index).setForeground(Color.BLACK);
+            }
+        }
     }
 }

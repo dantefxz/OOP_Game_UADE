@@ -55,7 +55,7 @@ public class AttackManager implements IAttackManager {
         this.turns = turn;
     }
 
-    public int subtractTurns(){
+    public int subtractTurn(){
         this.turns -= 1;
         if (this.turns < 0){
             this.turns = 0;

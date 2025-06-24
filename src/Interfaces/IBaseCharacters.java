@@ -2,7 +2,7 @@ package  Interfaces;
 
 import Characters.BaseCharacter;
 
-public interface IBaseCharactrs {
+public interface IBaseCharacters {
     String getName();
     double getHealth();
     void setHealth(double newHealth);
