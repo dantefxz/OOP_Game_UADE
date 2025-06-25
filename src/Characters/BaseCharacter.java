@@ -7,24 +7,27 @@ import java.util.HashMap;
 import java.util.Map;
 import Misc.Items;
 
+// Clase abstracta base para todos los personajes del juego
 public abstract class BaseCharacter implements IBaseCharacter {
 
+    // Atributos básicos del personaje
     String name;
     double maxHealth;
     double health;
     boolean canAttack;
-    Map<String, AttackManager> attacksList = new HashMap<>();
-    Map<String, Items> inventory = new HashMap<>();
-    private AnimationPanel sprite;
+    Map<String, AttackManager> attacksList = new HashMap<>(); // Lista de ataques disponibles
+    Map<String, Items> inventory = new HashMap<>(); // Inventario de objetos
+    private AnimationPanel sprite; // Sprite asociado al personaje
     String characterType;
     int ID;
 
+    // Constructor principal del personaje
     public BaseCharacter(String name, double maxHealth, String characterType, int ID){
         this.name = name;
         this.maxHealth = maxHealth;
         this.health = this.maxHealth;
         this.characterType = characterType;
-        this.ID = 0; // Solo para jefes
+        this.ID = ID; // Solo para jefes sino se fija en 0
     }
 
     public String getName(){
@@ -36,12 +39,13 @@ public abstract class BaseCharacter implements IBaseCharacter {
     }
 
     public void setHealth(double newHealth){
+        // Limita la vida a un mínimo de 0 y un máximo de maxHealth
         this.health = Math.min(Math.max(newHealth, 0), this.maxHealth);
     }
 
     //Función utilizada al recibir daño de una fuente externa o se cura al personaje actual.
     public void takeDamage(double damage){
-        this.setHealth(this.health - damage);
+        this.setHealth(this.health - damage); // Aplica daño (o cura si negativo)
         if (this.getHealth() < 0) {
             this.setHealth(0);
         }
@@ -70,7 +74,10 @@ public abstract class BaseCharacter implements IBaseCharacter {
         inventory.put(name, newItem);
     }
 
-
+    /*
+     Utiliza un ítem en otro personaje (puede curar o dañar).
+     Después de usarlo, se remueve del inventario.
+     */
     public void useItem(String name, BaseCharacter objective){
         Items item = inventory.get(name);
         if (item.getHealing() > 0){
@@ -97,18 +104,22 @@ public abstract class BaseCharacter implements IBaseCharacter {
         return orderedItems;
     }
 
+    // Asigna un sprite al personaje
     public void setSprite(AnimationPanel characterSprite){
         this.sprite = characterSprite;
     }
 
+    // Devuelve el sprite del personaje
     public AnimationPanel getSprite(){
         return this.sprite;
     }
 
+    // Establece si el personaje puede atacar o no
     public void setCanAttack(boolean value){
         this.canAttack = value;
     }
 
+    // Devuelve si el personaje puede atacar en este turno
     public boolean getCanAttack(){
         return this.canAttack;
     }
@@ -117,6 +128,7 @@ public abstract class BaseCharacter implements IBaseCharacter {
         return this.characterType;
     }
 
+    // Devuelve el ID (por ahora solo usado para jefes)
     public int getID(){
         return this.ID;
     }

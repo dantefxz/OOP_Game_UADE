@@ -8,24 +8,30 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Clase responsable de manejar la animación de sprites en forma de panel de Swing.
+ * Carga una sprite sheet desde disco, corta los frames y reproduce una animación.
+ */
 public class AnimationPanel extends JPanel {
-    private BufferedImage[] frames;
-    private int currentFrame = 0;
-    private Timer timer;
+    private BufferedImage[] frames; // Arreglo de frames individuales de la animación
+    private int currentFrame = 0;   // Frame actual que se está mostrando
+    private Timer timer;            // Timer que controla el avance de la animación
 
-    private final String folder;
-    private final String name;
-    private final String animation;
+    private final String folder;    // Carpeta del personaje
+    private final String name;      // Nombre del personaje
+    private final String animation; // Animación inicial
 
     private boolean loopingIdle = false;
 
     private Container parentContainer; // para auto-remover el panel
 
+    // Constructor que inicializa el panel con una animación específica
     public AnimationPanel(String folder, String name, String animation) {
         this.folder = folder;
         this.name = name;
         this.animation = animation;
 
+        // Se establece un tamaño fijo del panel
         Dimension fixedSize = new Dimension(getWidth(), getHeight());
         setPreferredSize(fixedSize);
         setMinimumSize(fixedSize);
@@ -33,7 +39,7 @@ public class AnimationPanel extends JPanel {
         setOpaque(false);
         setBounds(0, 0, fixedSize.width, fixedSize.height);
         try {
-            loadAnimation(animation);
+            loadAnimation(animation); // Carga la animación inicial
         } catch (IOException e) {
             System.err.println("No se pudo cargar la animación: " + e.getMessage());
         }
@@ -43,30 +49,41 @@ public class AnimationPanel extends JPanel {
         this.parentContainer = parent;
     }
 
+    // Carga una animación desde disco, corta y normaliza los frames, y arranca el timer
     public void loadAnimation(String animName) throws IOException {
         String name = this.name;
         String folder = this.folder;
         String path = "src/Assets/Images/Sprites/" + folder + "/" + name + "/" + animName + ".png";
         BufferedImage spriteSheet = ImageIO.read(new File(path));
+
+        // Corta los frames de la sprite sheet
         frames = cortarFrames(spriteSheet, folder.equalsIgnoreCase("Boss"));
+        // Normaliza los frames para que tengan el mismo ancho
         frames = normalizarFrames(frames);
 
         currentFrame = 0;
-        loopingIdle = animName.equalsIgnoreCase("Idle");
+        loopingIdle = animName.equalsIgnoreCase("Idle"); // Loop sólo si es idle
 
+        // Si ya había un timer corriendo, se detiene
         if (timer != null) timer.stop();
+        // Crea un nuevo timer para avanzar los frames cada 100ms
         timer = new Timer(100, e -> {
             currentFrame++;
             if (currentFrame >= frames.length) {
+                // Si termina la animación y es Idle, vuelve a empezar
                 if (loopingIdle) {
                     currentFrame = 0;
-                } else if (animation.equalsIgnoreCase("AttackSpell") || animation.equalsIgnoreCase("SpecialAttackSpell")) {
+                }
+                // Si es un hechizo, remueve el panel tras reproducirse
+                else if (animation.equalsIgnoreCase("AttackSpell") || animation.equalsIgnoreCase("SpecialAttackSpell")) {
                     timer.stop();
                     if (parentContainer != null) {
                         parentContainer.remove(this);
                         parentContainer.repaint();
                     }
-                } else {
+                }
+                // Si no es ninguna especial, vuelve a Idle automáticamente
+                else {
                     try {
                         loadAnimation("Idle");
                     } catch (IOException ex) {
@@ -74,9 +91,9 @@ public class AnimationPanel extends JPanel {
                     }
                 }
             }
-            repaint();
+            repaint(); // Fuerza redibujado con el nuevo frame
         });
-        timer.start();
+        timer.start(); // Inicia la animación
     }
 
     private BufferedImage[] cortarFrames(BufferedImage spriteSheet, boolean reverseOrder) {
@@ -84,6 +101,7 @@ public class AnimationPanel extends JPanel {
         int height = spriteSheet.getHeight();
         boolean[] columnHasContent = new boolean[width];
 
+        // Detecta qué columnas tienen contenido visible
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 int rgb = spriteSheet.getRGB(x, y);
@@ -95,6 +113,7 @@ public class AnimationPanel extends JPanel {
             }
         }
 
+        // Encuentra los puntos de inicio de cada frame
         ArrayList<Integer> startPoints = new ArrayList<>();
         boolean inContent = false;
         for (int x = 0; x < width; x++) {
@@ -108,6 +127,7 @@ public class AnimationPanel extends JPanel {
             }
         }
 
+        // Corta las subimágenes según los puntos encontrados
         ArrayList<BufferedImage> frameList = new ArrayList<>();
         for (int i = 0; i < startPoints.size(); i++) {
             int startX = startPoints.get(i);
@@ -118,6 +138,7 @@ public class AnimationPanel extends JPanel {
             }
         }
 
+        // Si es jefe, se invierte el orden de los frames
         if (reverseOrder) {
             java.util.Collections.reverse(frameList);
         }
@@ -129,12 +150,14 @@ public class AnimationPanel extends JPanel {
         int maxWidth = 0;
         int height = frames[0].getHeight();
 
+        // Calcula el ancho máximo
         for (BufferedImage frame : frames) {
             if (frame.getWidth() > maxWidth) {
                 maxWidth = frame.getWidth();
             }
         }
 
+        // Añade relleno a los frames más angostos
         BufferedImage[] normalized = new BufferedImage[frames.length];
         for (int i = 0; i < frames.length; i++) {
             BufferedImage frame = frames[i];
