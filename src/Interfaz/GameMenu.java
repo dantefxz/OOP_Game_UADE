@@ -7,15 +7,15 @@ import Misc.BackgroundPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import Misc.setKeybinding;
+import Misc.AttackingCore;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 
 public class GameMenu {
-    private Image backgroundImage;
-    static List<JLabel> attackLabels = new ArrayList<>();
-
+    public List<JLabel> attackLabels = new ArrayList<>();
+    public JLabel textLabel = null;
+    public JPanel skillList = null;
     public GameMenu(JFrame mainWindow, String selectedCharacter, String selectedBoss) {
         String characterPath = "Characters.Player." + selectedCharacter;
         String bossPath = "Characters.Bosses." + selectedBoss;
@@ -33,24 +33,26 @@ public class GameMenu {
             mainWindow.setContentPane(backgroundPanel);
             mainWindow.pack();
 
-            AnimationPanel characterSprite = getCharacterSprite(selectedCharacter, "Idle");
+            AnimationPanel characterSprite = createCharacterSprite(selectedCharacter, "Idle");
             backgroundPanel.add(characterSprite);
+            character.setSprite(characterSprite);
 
-            AnimationPanel bossSprite = getBossSprite(selectedBoss, "Idle");
+            AnimationPanel bossSprite = createBossSprite(selectedBoss, "Idle");
             backgroundPanel.add(bossSprite);
+            boss.setSprite(bossSprite);
 
-            JPanel skillList = createSkillList(character);
+            JPanel skillList = getSkillList(character);
             skillList.setBounds(400, 100, 200, 80);
             backgroundPanel.add(skillList);
 
-            JLabel textLabel = createTextLabel();
+            JLabel textLabel = getTextLabel();
             textLabel.setText("");
             textLabel.setBounds(160, 560, 5000, 80);
             textLabel.setForeground(Color.white);
             textLabel.setFont(new Font("Arial", Font.BOLD, 25));
             backgroundPanel.add(textLabel);
 
-            new setKeybinding(skillList, textLabel, attackLabels, character, characterSprite, boss);
+            new AttackingCore(this, character, boss);
 
             mainWindow.repaint();
             mainWindow.revalidate();
@@ -63,7 +65,7 @@ public class GameMenu {
         }
     }
 
-    private static AnimationPanel getBossSprite(String selectedBoss, String animationName) {
+    private static AnimationPanel createBossSprite(String selectedBoss, String animationName) {
         AnimationPanel bossSprite = new AnimationPanel("Bosses", selectedBoss, animationName);
         switch (selectedBoss) {
             case "Golem":
@@ -89,14 +91,14 @@ public class GameMenu {
     }
 
 
-    private static AnimationPanel getCharacterSprite(String selectedCharacter,  String animationName) {
+    private static AnimationPanel createCharacterSprite(String selectedCharacter,  String animationName) {
         AnimationPanel characterSprite = new AnimationPanel("Characters", selectedCharacter, animationName);
         switch (selectedCharacter) {
             case "Warrior", "Tank", "Wizard":
                 characterSprite.setBounds(200, 250, 300, 300);
                 break;
             case "Cthulhu":
-                characterSprite.setBounds(200, -300, 300 * 3, 300 * 3);
+                characterSprite.setBounds(200, -300, 300 * 2, 300 * 2);
                 break;
         }
         return characterSprite;
@@ -119,25 +121,45 @@ public class GameMenu {
         return spellsprite;
     }
 
-    private static JPanel createSkillList(BaseCharacter selectedCharacter){
-        JPanel skillList = new JPanel();
-        skillList.setOpaque(true);
-        skillList.setBackground(Color.white);
-        skillList.setLayout(new GridLayout(5,2));
+    public JPanel getSkillList(BaseCharacter selectedCharacter){
+        if (this.skillList != null){
+            return this.skillList;
+        }
+        this.skillList = new JPanel();
+        this.skillList.setOpaque(true);
+        this.skillList.setBackground(Color.white);
+        this.skillList.setLayout(new GridLayout(5,2));
         Map<String, AttackManager> attackList = selectedCharacter.getAttacksList();
         int currentKey = 0;
         for (Map.Entry<String, AttackManager> entry : attackList.entrySet()) {
             currentKey += 1;
             String attackName = entry.getKey();
             JLabel attackLabel = new JLabel(currentKey + " - "+ attackName);
-            skillList.add(attackLabel);
-            attackLabels.add(attackLabel);
+            this.skillList.add(attackLabel);
+            this.attackLabels.add(attackLabel);
         }
 
-        return skillList;
+        return this.skillList;
     }
 
-    private static JLabel createTextLabel(){
-        return new JLabel();
+    public JLabel getTextLabel(){
+        if (this.textLabel == null){
+            this.textLabel = new JLabel();
+        }
+
+        return this.textLabel;
+    }
+
+    public List<JLabel> getAttackLabels(){
+        return this.attackLabels;
+    }
+
+    public void customSprite(String characterType, String className, String animationName){
+        AnimationPanel spellsprite = new AnimationPanel(characterType, className, animationName);
+        switch (className){
+            case "Necromancer":
+                System.out.println("Crear acá sprites");
+                break;
+        }
     }
 }

@@ -1,17 +1,22 @@
 package Characters;
 
+import Interfaz.AnimationPanel;
 import Misc.AttackManager;
 import java.util.HashMap;
 import java.util.Map;
 import Misc.Items;
+
+import javax.swing.*;
 
 public abstract class BaseCharacter{
 
     String name;
     double maxHealth;
     double health;
+    boolean canAttack;
     Map<String, AttackManager> attacksList = new HashMap<>();
     Map<String, Items> inventory = new HashMap<>();
+    private AnimationPanel sprite;
 
     public BaseCharacter(String name, double maxHealth){
         this.name = name;
@@ -88,5 +93,21 @@ public abstract class BaseCharacter{
             }
         }
         return orderedItems;
+    }
+
+    public void setSprite(AnimationPanel characterSprite){
+        this.sprite = characterSprite;
+    }
+
+    public AnimationPanel getSprite(){
+        return this.sprite;
+    }
+
+    public void setCanAttack(boolean value){
+        this.canAttack = value;
+    }
+
+    public boolean getCanAttack(){
+        return this.canAttack;
     }
 }
