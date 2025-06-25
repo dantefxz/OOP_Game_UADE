@@ -7,9 +7,9 @@ public class PathHelper {
 
     public static Path getDataPath(String filename) {
         String path = PathHelper.class.getProtectionDomain()
-                        .getCodeSource()
-                        .getLocation()
-                        .getPath();
+                .getCodeSource()
+                .getLocation()
+                .getPath();
         try {
             path = java.net.URLDecoder.decode(path, "UTF-8");
         } catch (Exception e) {
@@ -19,7 +19,8 @@ public class PathHelper {
         Path dataPath;
 
         if (path.endsWith(".jar")) {
-            Path jarDir = Paths.get(path).getParent();
+            // Arreglamos la ruta malformada con prefijo "/C:/..." en Windows
+            Path jarDir = Paths.get(path.startsWith("/") && path.length() > 2 && path.charAt(2) == ':' ? path.substring(1) : path).getParent();
             dataPath = jarDir.resolve(filename);
         } else {
             Path projectRoot = Paths.get("").toAbsolutePath();
@@ -28,5 +29,4 @@ public class PathHelper {
 
         return dataPath;
     }
-
 }
