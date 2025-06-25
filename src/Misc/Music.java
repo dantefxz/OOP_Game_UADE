@@ -1,21 +1,18 @@
 package Misc;
 
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javazoom.jl.player.Player;
 
-import java.net.URL;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 
 public class Music {
     private static Music instance;
-    private MediaPlayer mediaPlayer;
+    private Player player;
+    private Thread musicThread;
 
-    // Necesario para inicializar JavaFX en aplicaciones no-JavaFX
-    static {
-        new JFXPanel();
+    private Music() {
+        // No se necesita inicialización especial
     }
-
-    private Music() {}
 
     public static Music getInstance() {
         if (instance == null) {
@@ -27,27 +24,32 @@ public class Music {
     public void playMusicFromResource(String resourcePath) {
         stopMusic();
 
-        try {
-            URL resource = getClass().getResource(resourcePath);
-            if (resource == null) {
-                System.out.println("⚠ No se encontró la música: " + resourcePath);
-                return;
+        musicThread = new Thread(() -> {
+            try {
+                InputStream is = getClass().getResourceAsStream(resourcePath);
+                if (is == null) {
+                    System.out.println("⚠ No se encontró la música: " + resourcePath);
+                    return;
+                }
+
+                BufferedInputStream bis = new BufferedInputStream(is);
+                player = new Player(bis);
+                player.play();  // No loop automático, pero se puede agregar con un bucle
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        });
 
-            Media media = new Media(resource.toExternalForm());
-            mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop infinito
-            mediaPlayer.setVolume(0.15);
-            mediaPlayer.play();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        musicThread.setDaemon(true); // Así no bloquea la salida del programa
+        musicThread.start();
     }
 
     public void stopMusic() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
+        if (player != null) {
+            player.close(); // Esto corta la reproducción
+        }
+        if (musicThread != null) {
+            musicThread.interrupt(); // Detiene el hilo
         }
     }
 }

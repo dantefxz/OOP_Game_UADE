@@ -44,7 +44,7 @@ public class GameMenu {
             backgroundPanel.add(skillList);
 
             JLabel textLabel = createTextLabel();
-            textLabel.setText("Testando aodisdiusjoaf");
+            textLabel.setText("");
             textLabel.setBounds(160, 560, 5000, 80);
             textLabel.setForeground(Color.white);
             textLabel.setFont(new Font("Arial", Font.BOLD, 25));
