@@ -15,17 +15,17 @@ import java.awt.FontFormatException;
 import java.util.Set;
 
 public class StartMenu implements IStartMenu {
-    private HashMap<String, Object> Menus = new HashMap<>();
-    private String selectedCharacter;
-    private String selectedBoss;
-    private final String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Ashgore, The Last Ember of Wrath", "Sir Malrik, the Corrupted"};
-    private final String[] Boss_Class = {"N/A", "Knight", "Golem", "Necromancer", "Demon", "Corrupted"};
-    private final String[] Character_Class = {"N/A","Warrior", "Tank", "Wizard", "Secret", "Cthulhu"};
+    HashMap<String, Object> Menus = new HashMap<>(); // Almacena los menús actuales por nombre
+    String selectedCharacter;
+    String selectedBoss;
+    // Listas de nombres y clases disponibles para bosses y personajes
+    String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Ashgore, The Last Ember of Wrath", "Sir Malrik, the Corrupted"};
+    String[] Boss_Class = {"N/A", "Knight", "Golem", "Necromancer", "Demon", "Corrupted"};
+    String[] Character_Class = {"N/A","Warrior", "Tank", "Wizard", "Secret", "Cthulhu"};
 
-    //Esta funcion tiene como objetivo cargar la letra para luego poder usarla
+    // Carga una fuente personalizada desde los recursos
     public Font loadCustomFont(float size) {
         try {
-            //Aca busca la fuente y si no la encuentra auto asigna la Serif
             URL fontUrl = getClass().getResource("/Assets/Fonts/Dungeon.ttf");
             if (fontUrl == null) {
                 System.err.println("Fuente Dungeon no encontrada.");
@@ -42,6 +42,8 @@ public class StartMenu implements IStartMenu {
             return new Font("Serif", Font.BOLD, (int) size);
         }
     }
+
+    // Constructor principal del menú de inicio
     public StartMenu(JFrame newMainMenu) throws IOException {
         Menus.put("MainMenu", newMainMenu);
         Music.getInstance().stopMusic(); // Por las dudas que ya haya música al reiniciar
@@ -57,12 +59,11 @@ public class StartMenu implements IStartMenu {
             logoLabel.setOpaque(false);
             logoLabel.setIcon(scaledIcon);
 
-
         } else {
             System.out.println("Incorrect Logo");
         }
 
-        //Graphical Items
+        // Carga y escala el título del juego
         JLabel titleLabel = new JLabel();
         URL titleURL = StartMenu.class.getResource("/Assets/Images/Title.png");
         if (titleURL != null) {
@@ -74,7 +75,7 @@ public class StartMenu implements IStartMenu {
             System.out.println("Title.png no encontrado");
         }
 
-        // Header with logo & title
+        // Header que contiene logo y título
         JPanel topPanel = new JPanel();
         topPanel.setPreferredSize(new Dimension(newMainMenu.getWidth(), 120));
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -87,16 +88,19 @@ public class StartMenu implements IStartMenu {
         topPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         topPanel.add(titleLabel);
 
+        // Configuración inicial del JFrame principal
         newMainMenu.getContentPane().setBackground(Color.BLACK);
         newMainMenu.setLayout(new BorderLayout());
         newMainMenu.add(topPanel, BorderLayout.NORTH);
-      // Misc
+
+        // Misc
         Music.getInstance().playMusicFromResource("/Assets/Sounds/MainMenu.mp3");
         CharacterMenu();
-
     }
+
+    // Menú para seleccionar personajes jugables
     public void CharacterMenu() throws IOException {
-        // Character selection, seleccion de personaje
+
         JPanel CharacterLabel = new JPanel();
         CharacterLabel.setLayout(new BoxLayout(CharacterLabel, BoxLayout.X_AXIS));
         CharacterLabel.setBackground(Color.BLACK);
@@ -134,7 +138,6 @@ public class StartMenu implements IStartMenu {
                 System.out.println("Imagen no encontrada para Character " + n + ": " + imagePath);
                 Character.setText(Character_Class[n]);
             }
-
 
             Character.setMaximumSize(buttonSize);
             Character.setPreferredSize(buttonSize);

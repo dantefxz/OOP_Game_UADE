@@ -16,12 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 public class AttackingCore implements IAttackingCore {
+    // Referencias visuales y del menú para actualizar interfaz
     private final JPanel skillList;
     private final JLabel textLabel;
     private final List<JLabel> attackLabels;
     private final GameMenu gameMenu;
     private JRootPane rootPane;
 
+    // Constructor principal, inicializa la lógica del combate y mapea las teclas
     public AttackingCore(GameMenu gameMenu, BaseCharacter selectedCharacter, BaseCharacter selectedBoss){ // Hacer funcionar el núcleo del juego y heredar GameMenu y las instancias necesarias.
         Map<String, AttackManager> attackList = selectedCharacter.getAttacksList();
         List<AttackManager> orderedAttacks = new ArrayList<>(attackList.values());
@@ -39,6 +41,7 @@ public class AttackingCore implements IAttackingCore {
             InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
             ActionMap actionMap = rootPane.getActionMap();
 
+            // Tecla ESC para reiniciar el juego
             inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "restartGame");
             actionMap.put("restartGame", new AbstractAction() {
                 @Override
@@ -54,12 +57,15 @@ public class AttackingCore implements IAttackingCore {
                 int OGTurns = attack.getTurns();
                 JLabel currentLabel = attackLabels.get(index);
                 currentLabel.setText(key + " - "+ attack.getName() + "("+attack.getTurns()+")");
+
+                // Cambia color según cooldown
                 if (attack.getTurns() > 1){
                     attackLabels.get(index).setForeground(Color.RED);
                 } else {
                     attackLabels.get(index).setForeground(Color.BLACK);
                 }
 
+                // Acción al presionar tecla
                 inputMap.put(KeyStroke.getKeyStroke(key), "attack_" + key);
                 actionMap.put("attack_" + key, new AbstractAction() {
                     @Override
@@ -84,6 +90,7 @@ public class AttackingCore implements IAttackingCore {
                             updateSkillList(orderedAttacks, attackLabels);
                         }
 
+                        // Ataque del jefe con delay de 4 segundos
                         new javax.swing.Timer(4000, new AbstractAction() { // ataca el jefe después de 4 segundos
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -100,6 +107,7 @@ public class AttackingCore implements IAttackingCore {
     }
     @Override
     public void clearKeybindings() {
+        // Limpia todos los bindings para evitar errores al reiniciar
         InputMap inputMap = this.rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = this.rootPane.getActionMap();
 
@@ -111,6 +119,8 @@ public class AttackingCore implements IAttackingCore {
         BaseCharacter selectedCharacter;
         BaseCharacter selectedBoss;
         System.out.println(origin.getType());
+
+        // Determina si el atacante es jugador o jefe
         if (Objects.equals(origin.getType(), "Player")){
             selectedCharacter = origin;
             selectedBoss = target;
@@ -126,6 +136,7 @@ public class AttackingCore implements IAttackingCore {
         this.gameMenu.customSprite(origin.getType(), origin.getName(), attack.getName()); // Revisar si hay un sprite extra en el ataque
         attack.execute(origin, target);
 
+        // Mensaje de combate
         double originHealth = origin.getHealth();
         double targetHealth = target.getHealth();
         boolean critic = (oldTargetHealth - targetHealth) > attack.getDamage();
@@ -134,7 +145,7 @@ public class AttackingCore implements IAttackingCore {
             this.textLabel.setText(textLabel.getText() + " CRÍTICO");
         }
 
-        // Para el que ataca
+        // Resta turnos a los ataques
         for (Map.Entry<String, AttackManager> entry : origin.getAttacksList().entrySet()) {
             AttackManager attackValue = entry.getValue();
             if (attackValue.getTurns() > 0) {
@@ -166,12 +177,14 @@ public class AttackingCore implements IAttackingCore {
             new javax.swing.Timer(4000, new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    ((javax.swing.Timer) e.getSource()).stop();
                     restartGame();
                 }
             }).start();
             return;
         }
 
+        // Turno del enemigo luego de 2 segundos
         new javax.swing.Timer(2000, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -185,6 +198,7 @@ public class AttackingCore implements IAttackingCore {
     }
     @Override
     public void updateSkillList(List<AttackManager> orderedAttacks, List<JLabel> attackLabels){
+        // Refresca el panel de habilidades con sus cooldowns
         for (int i = 0; i < orderedAttacks.size(); i++) {
             int index = i;
             String key = String.valueOf(i + 1);
@@ -200,6 +214,7 @@ public class AttackingCore implements IAttackingCore {
     }
     @Override
     public void restartGame(){
+        // Reinicia todo y vuelve al menú principal
         try {
             JFrame mainWindow = Main.getMainWindow();
             mainWindow.getContentPane().invalidate();
@@ -214,6 +229,7 @@ public class AttackingCore implements IAttackingCore {
     }
     @Override
     public void bossAttack(BaseCharacter selectedBoss, BaseCharacter selectedCharacter){
+        // El jefe escoge aleatoriamente un ataque disponible (sin cooldown)
         Map<String, AttackManager> bossAttacksList = selectedBoss.getAttacksList();
         if (!bossAttacksList.isEmpty()) {
             List<String> availableKeys = new ArrayList<>(bossAttacksList.keySet());
@@ -232,7 +248,7 @@ public class AttackingCore implements IAttackingCore {
                     System.out.println("El jefe usó: " + randomKey);
                     break;
                 } else {
-                    availableKeys.remove(randomKey);
+                    availableKeys.remove(randomKey); // Si tiene cooldown, busca otro
                 }
             }
         }

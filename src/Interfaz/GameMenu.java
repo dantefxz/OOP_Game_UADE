@@ -14,15 +14,27 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
 
+
+/*
+ Clase principal del menú de combate en el juego.
+ Se encarga de instanciar personajes, colocar sprites, mostrar habilidades
+ y gestionar la lógica inicial del combate.
+ */
 public class GameMenu implements IGameMenu {
-    public List<JLabel> attackLabels = new ArrayList<>();
-    public JLabel textLabel = null;
-    public JPanel skillList = null;
-    public BackgroundPanel backgroundPanel = null;
+    public List<JLabel> attackLabels = new ArrayList<>(); // Etiquetas para mostrar ataques
+    public JLabel textLabel = null;                       // Etiqueta para mensajes generales
+    public JPanel skillList = null;                       // Panel donde se listan habilidades
+    public BackgroundPanel backgroundPanel = null;        // Fondo de combate
+
+    /*
+     Constructor principal del menú de combate.
+     Carga las clases de personaje y jefe seleccionados, sus sprites, fondo, música, etc.
+     */
     public GameMenu(JFrame mainWindow, String selectedCharacter, String selectedBoss) {
         String characterPath = "Characters.Player." + selectedCharacter;
         String bossPath = "Characters.Bosses." + selectedBoss;
         try {
+            // Carga las clases dinámicamente con reflexión
             System.out.println(selectedCharacter + selectedBoss);
             Class<?> foundCharacter = Class.forName(characterPath);
             BaseCharacter character = (BaseCharacter) foundCharacter.getDeclaredConstructor().newInstance();
@@ -31,11 +43,13 @@ public class GameMenu implements IGameMenu {
             Class<?> foundBoss = Class.forName(bossPath);
             BaseCharacter boss = (BaseCharacter) foundBoss.getDeclaredConstructor().newInstance();
 
+            // Crea y aplica el fondo de batalla
             this.backgroundPanel = new BackgroundPanel("/Assets/Images/Sprites/Background/" + selectedBoss + ".png");
             this.backgroundPanel.setLayout(null);
             mainWindow.setContentPane(  this.backgroundPanel);
             mainWindow.pack();
 
+            // Carga los sprites del jugador y del jefe
             AnimationPanel characterSprite = createCharacterSprite(selectedCharacter, "Idle");
             this.backgroundPanel.add(characterSprite);
             character.setSprite(characterSprite);
@@ -44,10 +58,12 @@ public class GameMenu implements IGameMenu {
             this.backgroundPanel.add(bossSprite);
             boss.setSprite(bossSprite);
 
+            // Muestra las habilidades del personaje
             JPanel skillList = getSkillList(character);
             skillList.setBounds(400, 100, 200, 80);
             this.backgroundPanel.add(skillList);
 
+            // Etiqueta para mensajes de combate
             JLabel textLabel = getTextLabel();
             textLabel.setText("");
             textLabel.setBounds(160, 560, 5000, 80);
@@ -55,19 +71,23 @@ public class GameMenu implements IGameMenu {
             textLabel.setFont(new Font("Arial", Font.BOLD, 25));
             this.backgroundPanel.add(textLabel);
 
+            // Inicia la lógica de combate entre jugador y jefe
             new AttackingCore(this, character, boss);
 
             mainWindow.repaint();
             mainWindow.revalidate();
 
-
+            // Reproduce música del jefe
             Music.getInstance().stopMusic();
             Music.getInstance().playMusicFromResource("/Assets/Sounds/" + selectedBoss + ".mp3");
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Manejo de errores generales
         }
     }
 
+    /*
+     Crea el sprite del jefe con posicionamiento según el tipo de enemigo.
+     */
     public AnimationPanel createBossSprite(String selectedBoss, String animationName) {
         AnimationPanel bossSprite = new AnimationPanel("Boss", selectedBoss, animationName);
         switch (selectedBoss) {
@@ -93,7 +113,9 @@ public class GameMenu implements IGameMenu {
         return bossSprite;
     }
 
-
+    /*
+     Crea el sprite del jugador con dimensiones y posición según el personaje elegido.
+     */
     public AnimationPanel createCharacterSprite(String selectedCharacter, String animationName) {
         AnimationPanel characterSprite = new AnimationPanel("Player", selectedCharacter, animationName);
         switch (selectedCharacter) {
@@ -107,23 +129,9 @@ public class GameMenu implements IGameMenu {
         return characterSprite;
     }
 
-
-    public AnimationPanel getNecromancerAttack(String selectedBoss, String animationName) {
-        AnimationPanel spellsprite = new AnimationPanel("Boss", selectedBoss, animationName);
-        switch (animationName) {
-            case "AttackSpell":
-                spellsprite.setBounds(150, 200, 300, 300);
-                break;
-            case "SpecialAttackSpell":
-                spellsprite.setBounds(245, 350, 150, 150);
-                break;
-            default:
-                spellsprite.setBounds(200, 250, 150, 150);
-                break;
-        }
-        return spellsprite;
-    }
-
+    /*
+     Construye el panel de habilidades a partir de los ataques del personaje.
+     */
     public JPanel getSkillList(BaseCharacter selectedCharacter) {
         if (this.skillList != null) {
             return this.skillList;
@@ -145,6 +153,9 @@ public class GameMenu implements IGameMenu {
         return this.skillList;
     }
 
+    /*
+     Devuelve la etiqueta para mostrar texto general del combate.
+     */
     public JLabel getTextLabel() {
         if (this.textLabel == null) {
             this.textLabel = new JLabel();
@@ -153,10 +164,15 @@ public class GameMenu implements IGameMenu {
         return this.textLabel;
     }
 
+    //Devuelve la lista de etiquetas que representan ataques (para actualizar estilo, etc).
     public List<JLabel> getAttackLabels() {
         return this.attackLabels;
     }
 
+    /*
+     Permite cargar animaciones personalizadas dependiendo del personaje y tipo de ataque.
+     Útil para añadir efectos visuales especiales (como hechizos o habilidades épicas).
+     */
     public void customSprite(String characterType, String className, String animationName) {
         //AnimationPanel spellsprite = new AnimationPanel(characterType, className, animationName);
         switch (className) {

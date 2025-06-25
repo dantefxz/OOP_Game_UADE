@@ -6,9 +6,15 @@ import java.awt.Image;
 import java.awt.Graphics;
 import java.net.URL;
 
+/**
+ * Panel personalizado que permite establecer una imagen de fondo.
+ * Utilizado principalmente para fondos de pantalla en el menú o durante el combate.
+ */
+
 public class BackgroundPanel extends JPanel {
     private Image backgroundImage;
 
+    //Constructor que carga la imagen desde un path dentro de los recursos del proyecto
     public BackgroundPanel(String imagePath) {
         URL imageUrl = getClass().getResource(imagePath);
         if (imageUrl != null) {
@@ -18,6 +24,7 @@ public class BackgroundPanel extends JPanel {
         }
     }
 
+    //Método sobrescrito que dibuja la imagen de fondo ajustada al tamaño del panel
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
