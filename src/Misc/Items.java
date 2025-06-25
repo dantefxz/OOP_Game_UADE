@@ -1,6 +1,8 @@
 package Misc;
 
-public class Items {
+import Interfaces.IItems;
+
+public class Items implements IItems {
     String name;
     int healing;
     int damage;

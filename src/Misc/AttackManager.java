@@ -5,10 +5,10 @@ import Characters.BaseCharacter;
 
 // agregar interfaz
 public class AttackManager implements IAttackManager {
-    private String name;
-    private double damage;
-    private double healing;
-    private double criticRate;
+    private final String name;
+    private final double damage;
+    private final double healing;
+    private final double criticRate;
     private int turns;
 
     public AttackManager(String name, double damage, double healing, double criticRate, int turns) {
@@ -19,6 +19,7 @@ public class AttackManager implements IAttackManager {
         this.turns = turns;
     }
 
+    //Función utilizada para que el daño tenga una posibilidad de ser crítico
     @Override
     public double critic(double damage, double criticRate){
         if (Math.random() * 100 < criticRate) {
@@ -27,6 +28,8 @@ public class AttackManager implements IAttackManager {
         return damage;
     }
 
+
+    //Función utilizada para indicar si se cura al jugador o se daña al enemigo.
     @Override
     public void execute(BaseCharacter source, BaseCharacter Enemy) {
         double finalDamage = this.damage;
@@ -55,11 +58,10 @@ public class AttackManager implements IAttackManager {
         this.turns = turn;
     }
 
-    public int subtractTurn(){
+    public void subtractTurn(){
         this.turns -= 1;
         if (this.turns < 0){
             this.turns = 0;
         }
-        return this.turns;
     }
 }

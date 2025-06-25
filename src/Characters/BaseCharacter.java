@@ -1,22 +1,30 @@
 package Characters;
 
+import Interfaces.IBaseCharacter;
+import Interfaz.AnimationPanel;
 import Misc.AttackManager;
 import java.util.HashMap;
 import java.util.Map;
 import Misc.Items;
 
-public abstract class BaseCharacter{
+public abstract class BaseCharacter implements IBaseCharacter {
 
     String name;
     double maxHealth;
     double health;
+    boolean canAttack;
     Map<String, AttackManager> attacksList = new HashMap<>();
     Map<String, Items> inventory = new HashMap<>();
+    private AnimationPanel sprite;
+    String characterType;
+    int ID;
 
-    public BaseCharacter(String name, double maxHealth){
+    public BaseCharacter(String name, double maxHealth, String characterType, int ID){
         this.name = name;
         this.maxHealth = maxHealth;
         this.health = this.maxHealth;
+        this.characterType = characterType;
+        this.ID = 0; // Solo para jefes
     }
 
     public String getName(){
@@ -31,20 +39,16 @@ public abstract class BaseCharacter{
         this.health = Math.min(Math.max(newHealth, 0), this.maxHealth);
     }
 
+    //Función utilizada al recibir daño de una fuente externa o se cura al personaje actual.
     public void takeDamage(double damage){
         this.setHealth(this.health - damage);
         if (this.getHealth() < 0) {
             this.setHealth(0);
-            System.out.println(this.getName() + " is dead");
-        } else {
-            System.out.println(this.getName() + "'s health is " + this.getHealth());
         }
-        System.out.println(this.getName() + this.getHealth());
-        if (damage < 0) { // Healing
+        if (damage < 0) { // Curación
             double finalHealing = damage * -1;
             double nuevaVida = this.getHealth() + (finalHealing);
             this.setHealth(nuevaVida);
-            System.out.println(this.getName() + " se curó " + finalHealing + " de vida. Nueva vida: " + nuevaVida);
         }
     }
 
@@ -52,6 +56,7 @@ public abstract class BaseCharacter{
         return attacksList;
     }
 
+    //Función utilizada para crear y añadir la lista de ataques del personaje
     public void createAttack(String name, double damage, double healing, double criticRate, int turns){
         AttackManager NewAttack = new AttackManager(name, damage, healing, criticRate, turns);
         attacksList.put(name, NewAttack);
@@ -59,10 +64,12 @@ public abstract class BaseCharacter{
 
     public abstract void checkAbility(String ability);
 
+    //Función utilizada para crear y añadir items al inventario
     public void addItem(String name, int healing, int damage){
         Items newItem = new Items(name, healing, damage);
         inventory.put(name, newItem);
     }
+
 
     public void useItem(String name, BaseCharacter objective){
         Items item = inventory.get(name);
@@ -88,5 +95,29 @@ public abstract class BaseCharacter{
             }
         }
         return orderedItems;
+    }
+
+    public void setSprite(AnimationPanel characterSprite){
+        this.sprite = characterSprite;
+    }
+
+    public AnimationPanel getSprite(){
+        return this.sprite;
+    }
+
+    public void setCanAttack(boolean value){
+        this.canAttack = value;
+    }
+
+    public boolean getCanAttack(){
+        return this.canAttack;
+    }
+
+    public String getType(){
+        return this.characterType;
+    }
+
+    public int getID(){
+        return this.ID;
     }
 }

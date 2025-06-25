@@ -9,9 +9,10 @@ public class Music {
     private static Music instance;
     private Player player;
     private Thread musicThread;
+    private boolean loop = true;
 
     private Music() {
-        // No se necesita inicialización especial
+        // No es necesario constructor
     }
 
     public static Music getInstance() {
@@ -24,29 +25,36 @@ public class Music {
     public void playMusicFromResource(String resourcePath) {
         stopMusic();
 
-        musicThread = new Thread(() -> {
-            try {
-                InputStream is = getClass().getResourceAsStream(resourcePath);
-                if (is == null) {
-                    System.out.println("⚠ No se encontró la música: " + resourcePath);
-                    return;
-                }
+        loop = true; // Reiniciar el loop
 
-                BufferedInputStream bis = new BufferedInputStream(is);
-                player = new Player(bis);
-                player.play();  // No loop automático, pero se puede agregar con un bucle
-            } catch (Exception e) {
-                e.printStackTrace();
+        musicThread = new Thread(() -> {
+            while (loop) {
+                try {
+                    InputStream is = getClass().getResourceAsStream(resourcePath);
+                    if (is == null) {
+                        System.out.println("No se encontró la música: " + resourcePath);
+                        return;
+                    }
+
+                    BufferedInputStream bis = new BufferedInputStream(is);
+                    player = new Player(bis);
+                    player.play();  // Se bloquea hasta que termine, por eso el bucle
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    break;
+                }
             }
         });
 
-        musicThread.setDaemon(true); // Así no bloquea la salida del programa
+        musicThread.setDaemon(true); // No bloquea el cierre del programa
         musicThread.start();
     }
 
     public void stopMusic() {
+        loop = false; // Romper el bucle
         if (player != null) {
-            player.close(); // Esto corta la reproducción
+            player.close(); // Detiene la reproducción
         }
         if (musicThread != null) {
             musicThread.interrupt(); // Detiene el hilo

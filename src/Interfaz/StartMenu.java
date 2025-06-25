@@ -1,8 +1,8 @@
 package Interfaz;
 
+import Interfaces.IStartMenu;
 import Misc.DB;
 import Misc.Music;
-import Interfaz.GameMenu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +14,7 @@ import java.net.URL;
 import java.awt.FontFormatException;
 import java.util.Set;
 
-public class StartMenu {
+public class StartMenu implements IStartMenu {
     HashMap<String, Object> Menus = new HashMap<>();
     String selectedCharacter;
     String selectedBoss;
@@ -22,8 +22,8 @@ public class StartMenu {
     String[] Boss_Class = {"N/A", "Knight", "Golem", "Necromancer", "Demon", "Corrupted"};
     String[] Character_Class = {"N/A","Warrior", "Tank", "Wizard", "Secret", "Cthulhu"};
 
-    //Esta funcion tiene como objetico cargar la la letra para luego poder usarla
-    private Font loadCustomFont(float size) {
+    //Esta funcion tiene como objetivo cargar la letra para luego poder usarla
+    public Font loadCustomFont(float size) {
         try {
             //Aca busca la fuente y si no la encuentra auto asigna la Serif
             URL fontUrl = getClass().getResource("/Assets/Fonts/Dungeon.ttf");
@@ -44,6 +44,7 @@ public class StartMenu {
     }
     public StartMenu(JFrame newMainMenu) throws IOException {
         Menus.put("MainMenu", newMainMenu);
+        Music.getInstance().stopMusic(); // Por las dudas que ya haya música al reiniciar
         //Logo
         URL iconURL = StartMenu.class.getResource("/Assets/Images/logo.png");
         JLabel logoLabel = new JLabel();
@@ -114,13 +115,13 @@ public class StartMenu {
             boolean specialClass = currentDB.hasSpecialClass();
             if (n == 4) { // Verifica si tiene el personaje especial
                 if (specialClass){
-                    imagePath = "/Assets/Images/Sprites/Characters/Player" + n + "_preview.png";
+                    imagePath = "/Assets/Images/Sprites/Player/Player" + n + "_preview.png";
                 } else {
-                    imagePath = "/Assets/Images/Sprites/Characters/Secret.png";
+                    imagePath = "/Assets/Images/Sprites/Player/Secret.png";
                 }
             }else{
                 //Muestra la imagen del personaje
-                imagePath = "/Assets/Images/Sprites/Characters/Player" + n + "_preview.png";
+                imagePath = "/Assets/Images/Sprites/Player/Player" + n + "_preview.png";
             }
             URL imageUrl = StartMenu.class.getResource(imagePath);
 
@@ -280,7 +281,7 @@ public class StartMenu {
             bossPanel.setOpaque(false);
 
             JButton Boss = new JButton();
-            String imagePath = "/Assets/Images/Sprites/Bosses/Boss" + n + "_preview.png";
+            String imagePath = "/Assets/Images/Sprites/Boss/Boss" + n + "_preview.png";
             URL imageUrl = StartMenu.class.getResource(imagePath);
 
             if (imageUrl != null) {
@@ -368,7 +369,7 @@ public class StartMenu {
 
     }
 
-    private JFrame getMainMenu(){
+    public JFrame getMainMenu(){
         return (JFrame) Menus.get("MainMenu");
     }
 
