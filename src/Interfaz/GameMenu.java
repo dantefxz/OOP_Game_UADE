@@ -101,7 +101,7 @@ public class GameMenu implements IGameMenu {
                 characterSprite.setBounds(200, 250, 300, 300);
                 break;
             case "Cthulhu":
-                characterSprite.setBounds(200, -300, 300 * 2, 300 * 2);
+                characterSprite.setBounds(200, -50, 300 * 2, 300 * 2);
                 break;
         }
         return characterSprite;
