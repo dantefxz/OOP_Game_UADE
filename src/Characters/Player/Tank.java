@@ -6,54 +6,44 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class Tank extends BaseCharacter {
-    int Shield;
-    private boolean resistanceOn = false;
-    private int resistanceDuration = 0;
+    private boolean resistance = false;
+    private int resistanceTurns = 0;
     Map<String, Object> customAbility = new HashMap<>();
 
     public Tank() {
         super("Tank", 400);
         this.createAttack("Attack", 20, 0, 15, 0);
-        this.createAttack("SpecialAttack", 50, 0, 35, 3);
-        this.createAttack("Ult_Resistance", 0, 20,0, 5);
+        this.createAttack("SpecialAttack", 20, 0, 0, 5);
     }
-
-    private void increaseResistance(){
-        this.resistanceOn = true;
-        this.resistanceDuration = 3;
-    }
-
     @Override
-    public void takeDamage(double damage){
-        if (resistanceOn) {
-            double finalDamage = damage / 1.5;
-            this.setHealth(this.getHealth() - finalDamage);
-            resistanceDuration --;
-            //Hacer un atributo resistanceTurns que se reste cada que se ejecute este codigo.
-        }
-        else{
-            this.setHealth(this.getHealth() - damage);
-        }
-        if (this.getHealth() < 0) {
-            this.setHealth(0);
-            System.out.println(this.getName() + " is dead");
-        } else {
-            System.out.println(this.getName() + "'s health is " + this.getHealth());
-        }
-
-        if (damage < 0) { // Healing
-            double finalHealing = damage * -1;
-            double nuevaVida = this.getHealth() + (finalHealing);
-            this.setHealth(nuevaVida);
-            System.out.println(this.getName() + " se curó " + finalHealing + " de vida. Nueva vida: " + nuevaVida);
+    public void checkAbility(String ability) {
+        if (ability.equals("SpecialAttack")) {
+            System.out.println("Escudo activado");
+            activateResistance();
         }
     }
 
-    @Override
-    public void checkAbility(String ability){
-        if (ability.equals("Ult_Resistance")){
-            increaseResistance();
+    private void activateResistance() {
+        this.resistance = true;
+        this.resistanceTurns = 3; // Dura 3 turnos
+    }
+
+    public boolean hasResistance() {
+        return resistanceTurns > 0;
+    }
+
+
+    public void reduceResistanceTurns() {
+        if (resistanceTurns > 0) {
+            resistanceTurns--;
+            if (resistanceTurns == 0) {
+                resistance = false;
+            }
         }
+    }
+
+    public boolean isResistant() {
+        return resistance;
     }
 
 }

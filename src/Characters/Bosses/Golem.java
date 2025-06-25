@@ -8,7 +8,6 @@ public class Golem extends BaseCharacter {
         super("Malphite, the King of the Mountains", 800);
         this.createAttack("Attack", 20, 0, 0, 0);
         this.createAttack("SpecialAttack", 30, 10,0, 4);
-        this.createAttack("Ultimate", 30, 0, 0, 6);
     }
 
     @Override
