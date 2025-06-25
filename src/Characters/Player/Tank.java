@@ -8,8 +8,8 @@ public class Tank extends BaseCharacter {
 
     public Tank() {
         super("Tank", 400, "Player",0);
-        this.createAttack("Attack", 20, 0, 15, 0);
-        this.createAttack("SpecialAttack", 20, 0, 0, 5);
+        this.createAttack("Attack", 20, 0, 20, 0);
+        this.createAttack("SpecialAttack", 30, 0, 10, 5);
     }
 
     //Función que al momento de ejecutar una animación, chequea si la habilidad es la indicada y activa la resistencia.

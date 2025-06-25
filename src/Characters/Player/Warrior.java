@@ -6,7 +6,7 @@ import Misc.AttackManager;
 public class Warrior extends BaseCharacter {
     
     public Warrior() {
-        super("Warrior", 250, "Player",0);
+        super("Warrior", 300, "Player",0);
         this.createAttack("Attack", 25, 0, 50, 0);
         this.createAttack("SpecialAttack", 60, 0, 50, 3);
 
