@@ -7,7 +7,7 @@ public class Tank extends BaseCharacter {
     private int resistanceTurns = 0;
 
     public Tank() {
-        super("Tank", 400, "Player",0);
+        super("Tank", 4000, "Player",0);
         this.createAttack("Attack", 20, 0, 20, 0);
         this.createAttack("SpecialAttack", 30, 0, 10, 5);
     }

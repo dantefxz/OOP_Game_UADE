@@ -161,16 +161,11 @@ public class AttackingCore implements IAttackingCore {
         if (selectedBoss.getHealth() <= 0) { // el usuario ganó
             textLabel.setText("El usuario ha ganado.");
             selectedBoss.getSprite().loadAnimation("Death");
+            DB dataBase = new DB();
+            dataBase.addBossDefeated(selectedBoss.getID());
             new javax.swing.Timer(4000, new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    ((javax.swing.Timer) e.getSource()).stop();
-                    try {
-                        DB dataBase = new DB();
-                        dataBase.addBossDefeated(selectedBoss.getID());
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
                     restartGame();
                 }
             }).start();

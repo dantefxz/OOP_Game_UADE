@@ -15,12 +15,12 @@ import java.awt.FontFormatException;
 import java.util.Set;
 
 public class StartMenu implements IStartMenu {
-    HashMap<String, Object> Menus = new HashMap<>();
-    String selectedCharacter;
-    String selectedBoss;
-    String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Ashgore, The Last Ember of Wrath", "Sir Malrik, the Corrupted"};
-    String[] Boss_Class = {"N/A", "Knight", "Golem", "Necromancer", "Demon", "Corrupted"};
-    String[] Character_Class = {"N/A","Warrior", "Tank", "Wizard", "Secret", "Cthulhu"};
+    private HashMap<String, Object> Menus = new HashMap<>();
+    private String selectedCharacter;
+    private String selectedBoss;
+    private final String[] Boss_Name = {"N/A","Sir Malrik, Champion of the Light", "Malphite, the King of the Mountains", "Mortuus, Master of the Undead", "Ashgore, The Last Ember of Wrath", "Sir Malrik, the Corrupted"};
+    private final String[] Boss_Class = {"N/A", "Knight", "Golem", "Necromancer", "Demon", "Corrupted"};
+    private final String[] Character_Class = {"N/A","Warrior", "Tank", "Wizard", "Secret", "Cthulhu"};
 
     //Esta funcion tiene como objetivo cargar la letra para luego poder usarla
     public Font loadCustomFont(float size) {
