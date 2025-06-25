@@ -47,9 +47,8 @@ public class AnimationPanel extends JPanel {
         String name = this.name;
         String folder = this.folder;
         String path = "src/Assets/Images/Sprites/" + folder + "/" + name + "/" + animName + ".png";
-        System.out.println("Cargando sprite desde: " + path);
         BufferedImage spriteSheet = ImageIO.read(new File(path));
-        frames = cortarFrames(spriteSheet, folder.equalsIgnoreCase("Bosses"));
+        frames = cortarFrames(spriteSheet, folder.equalsIgnoreCase("Boss"));
         frames = normalizarFrames(frames);
 
         currentFrame = 0;

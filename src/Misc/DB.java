@@ -1,5 +1,6 @@
 package Misc;
 
+import Interfaces.IDB;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -9,7 +10,7 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DB {
+public class DB implements IDB {
     private JSONObject db;
     private Path dataPath;
 
@@ -18,7 +19,7 @@ public class DB {
         load();
     }
 
-    private void load() throws IOException {
+    public void load() throws IOException {
         if (Files.exists(dataPath)) {
             String content = new String(Files.readAllBytes(dataPath));
             db = new JSONObject(content);
@@ -31,7 +32,7 @@ public class DB {
         }
     }
 
-    private void save() throws IOException {
+    public void save() throws IOException {
         Files.write(dataPath, db.toString(4).getBytes());
     }
 
@@ -55,7 +56,11 @@ public class DB {
         if (!bosses.contains(bossNumber)) {
             bosses.add(bossNumber);
             db.put("bossesDefeated", new JSONArray(bosses));
-            save();
+            if (getBossesDefeated().contains(5)){
+                setSpecialClassUnlocked(true);
+            } else {
+                save();
+            }
         }
     }
 

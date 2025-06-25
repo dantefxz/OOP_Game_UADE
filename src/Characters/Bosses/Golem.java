@@ -5,7 +5,7 @@ import Misc.AttackManager;
 public class Golem extends BaseCharacter {
 
     public Golem() {
-        super("Malphite, the King of the Mountains", 800);
+        super("Malphite, the King of the Mountains", 800, "Boss",2);
         this.createAttack("Attack", 20, 0, 0, 0);
         this.createAttack("SpecialAttack", 30, 10,0, 4);
     }
