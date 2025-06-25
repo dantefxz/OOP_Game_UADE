@@ -133,7 +133,7 @@ public class AttackingCore implements IAttackingCore {
         origin.setCanAttack(false);
         origin.getSprite().loadAnimation(attack.getName());
         target.getSprite().loadAnimation("Hurt");
-        this.gameMenu.customSprite(origin.getType(), origin.getName(), attack.getName()); // Revisar si hay un sprite extra en el ataque
+        this.gameMenu.customSprite(origin.getType(), gameMenu.selectedBoss, attack.getName()); // Revisar si hay un sprite extra en el ataque
         attack.execute(origin, target);
 
         // Mensaje de combate

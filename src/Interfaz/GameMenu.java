@@ -25,6 +25,8 @@ public class GameMenu implements IGameMenu {
     public JLabel textLabel = null;                       // Etiqueta para mensajes generales
     public JPanel skillList = null;                       // Panel donde se listan habilidades
     public BackgroundPanel backgroundPanel = null;        // Fondo de combate
+    public JFrame mainWindow;                             // Ventana principal
+    public String selectedBoss;                           // Necesario para saber la clase del jefe
 
     /*
      Constructor principal del menú de combate.
@@ -35,17 +37,17 @@ public class GameMenu implements IGameMenu {
         String bossPath = "Characters.Bosses." + selectedBoss;
         try {
             // Carga las clases dinámicamente con reflexión
-            System.out.println(selectedCharacter + selectedBoss);
             Class<?> foundCharacter = Class.forName(characterPath);
             BaseCharacter character = (BaseCharacter) foundCharacter.getDeclaredConstructor().newInstance();
-            System.out.println(character.getAttacksList());
 
             Class<?> foundBoss = Class.forName(bossPath);
             BaseCharacter boss = (BaseCharacter) foundBoss.getDeclaredConstructor().newInstance();
+            this.selectedBoss = selectedBoss;
 
             // Crea y aplica el fondo de batalla
             this.backgroundPanel = new BackgroundPanel("/Assets/Images/Sprites/Background/" + selectedBoss + ".png");
             this.backgroundPanel.setLayout(null);
+            this.mainWindow = mainWindow;
             mainWindow.setContentPane(  this.backgroundPanel);
             mainWindow.pack();
 
@@ -181,19 +183,24 @@ public class GameMenu implements IGameMenu {
                 if (Objects.equals(animationName, "Attack")) {
                     AnimationPanel spellsprite = new AnimationPanel(characterType, className, "AttackSpell");
                     spellsprite.setBounds(150, 200, 300, 300);
+                    backgroundPanel.add(spellsprite);
                     break;
-                } else if (animationName == "SpecialAttack") {
+                } else if (Objects.equals(animationName, "SpecialAttack")) {
                     AnimationPanel spellsprite = new AnimationPanel(characterType, className, "SpecialAttackSpell");
                     spellsprite.setBounds(245, 350, 150, 150);
+                    backgroundPanel.add(spellsprite);
                     break;
                 }
                 break;
             case "Corrupted":
                 if (Objects.equals(animationName, "SpecialAttack")) {
                     AnimationPanel spellsprite = new AnimationPanel(characterType, className, "Light");
-                    spellsprite.setBounds(150, 200, 150, 150);
+                    spellsprite.setBounds(150, 150, 150 * 2, 150 * 2);
+                    backgroundPanel.add(spellsprite);
                     break;
                 }
         }
+        mainWindow.repaint();
+        mainWindow.revalidate();
     }
 }

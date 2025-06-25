@@ -75,7 +75,7 @@ public class AnimationPanel extends JPanel {
                     currentFrame = 0;
                 }
                 // Si es un hechizo, remueve el panel tras reproducirse
-                else if (animation.equalsIgnoreCase("AttackSpell") || animation.equalsIgnoreCase("SpecialAttackSpell")) {
+                else if (animation.equalsIgnoreCase("AttackSpell") || animation.equalsIgnoreCase("SpecialAttackSpell") || animation.equalsIgnoreCase("Light")) {
                     timer.stop();
                     if (parentContainer != null) {
                         parentContainer.remove(this);
